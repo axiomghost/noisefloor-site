@@ -1,11 +1,11 @@
 ---
-title: The Pipeline Was Fine. The Context Was Broken.
-description: A short technical postmortem on how long-horizon context drift made an LDPC evaluation pipeline look healthy while quietly breaking the meaning of its outputs.
+title: "The Pipeline Was Fine. The Context Was Broken."
+description: "A short technical postmortem on how long-horizon context drift made an LDPC evaluation pipeline look healthy while quietly breaking the meaning of its outputs."
 pubDate: 2026-04-12
 draft: false
-audience: technically literate engineers and researchers working with simulation pipelines, coding theory, or agent-assisted engineering workflows
-thesis: In long-running agent-assisted engineering work, the real failure mode is often not missing code but broken semantic continuity: important context is stored, but not retrieved and enforced when later implementation decisions are made.
-project: ldpc-bg1
+audience: "technically literate engineers and researchers working with simulation pipelines, coding theory, or agent-assisted engineering workflows"
+thesis: "In long-running agent-assisted engineering work, the real failure mode is often not missing code but broken semantic continuity: important context is stored, but not retrieved and enforced when later implementation decisions are made."
+project: "ldpc-bg1"
 tags: [ldpc, sionna, agents, memory, simulation, failure-analysis, research-engineering, context]
 ---
 
