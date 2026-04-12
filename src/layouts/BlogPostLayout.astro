@@ -35,7 +35,7 @@ const updated = formatDate(frontmatter.updatedDate);
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -57,8 +57,8 @@ const updated = formatDate(frontmatter.updatedDate);
         --accent-3: #00ff9f;
         --code-bg: rgba(8, 8, 16, 0.96);
         --shadow: rgba(0, 0, 0, 0.45);
-        font-family: "JetBrains Mono", "Courier New", monospace;
-        line-height: 1.72;
+        font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+        line-height: 1.78;
       }
 
       body {
@@ -201,7 +201,7 @@ const updated = formatDate(frontmatter.updatedDate);
         top: 2rem;
         padding: 1.2rem 1rem;
         border: 1px solid var(--border);
-        border-top: 2px solid var(--accent);
+        border-top: 2px solid var(--signal);
         background:
           linear-gradient(180deg, rgba(8, 8, 14, 0.94), rgba(6, 6, 12, 0.86)),
           var(--panel);
@@ -248,7 +248,7 @@ const updated = formatDate(frontmatter.updatedDate);
       article {
         padding: 1.5rem 1.6rem 1.8rem 1.8rem;
         border: 1px solid var(--border);
-        border-left: 3px solid var(--accent);
+        border-left: 3px solid var(--signal);
         background:
           linear-gradient(180deg, rgba(8, 8, 14, 0.94), rgba(6, 6, 12, 0.86)),
           var(--panel);
@@ -256,7 +256,9 @@ const updated = formatDate(frontmatter.updatedDate);
         box-shadow:
           0 16px 40px rgba(0, 0, 0, 0.25),
           0 0 20px rgba(0, 229, 255, 0.03);
-        font-size: 0.92rem;
+        font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+        font-size: 0.94rem;
+        line-height: 1.82;
       }
 
       a {
@@ -307,7 +309,7 @@ const updated = formatDate(frontmatter.updatedDate);
       article :global(blockquote) {
         margin: 1.4rem 0;
         padding-left: 1rem;
-        border-left: 3px solid var(--accent);
+        border-left: 3px solid var(--signal);
         color: #8fa8b8;
       }
 
@@ -401,7 +403,7 @@ const updated = formatDate(frontmatter.updatedDate);
 
         .sidebar {
           position: static;
-          border-top: 2px solid var(--accent);
+          border-top: 2px solid var(--signal);
         }
 
         article {
