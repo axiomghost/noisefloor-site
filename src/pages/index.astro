@@ -43,6 +43,7 @@ const posts = (await getCollection("blog"))
         --signal-strong: #b9e0c7;
         --signal-dim: #5d7f6a;
         --accent: #78a8a1;
+        --accent-2: #7fa9c7;
         --shadow: rgba(0, 0, 0, 0.42);
         font-family: "IBM Plex Mono", "Courier New", monospace;
         line-height: 1.7;
@@ -56,8 +57,10 @@ const posts = (await getCollection("blog"))
           radial-gradient(circle at 18% 16%, var(--bg-haze), transparent 22%),
           radial-gradient(circle at 72% 10%, var(--bg-haze-2), transparent 18%),
           radial-gradient(circle at 50% 85%, rgba(120, 168, 161, 0.05), transparent 26%),
+          radial-gradient(circle at 78% 76%, rgba(127, 169, 199, 0.06), transparent 18%),
           linear-gradient(120deg, transparent 0%, rgba(134, 193, 157, 0.035) 24%, transparent 48%),
           linear-gradient(60deg, transparent 0%, rgba(120, 168, 161, 0.03) 28%, transparent 52%),
+          linear-gradient(28deg, transparent 0%, rgba(127, 169, 199, 0.028) 30%, transparent 54%),
           var(--bg);
         position: relative;
       }
@@ -77,9 +80,27 @@ const posts = (await getCollection("blog"))
             circle at 80% 30%,
             rgba(120, 168, 161, 0.04) 0 1px,
             transparent 1px 34px
+          ),
+          repeating-radial-gradient(
+            circle at 62% 74%,
+            rgba(127, 169, 199, 0.032) 0 1px,
+            transparent 1px 40px
           );
         filter: blur(14px);
-        opacity: 0.45;
+        opacity: 0.55;
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(circle at 18% 24%, transparent 0 84px, rgba(134, 193, 157, 0.05) 84px 86px, transparent 86px 116px, rgba(134, 193, 157, 0.035) 116px 118px, transparent 118px),
+          radial-gradient(circle at 72% 28%, transparent 0 112px, rgba(127, 169, 199, 0.04) 112px 114px, transparent 114px 150px, rgba(127, 169, 199, 0.028) 150px 152px, transparent 152px),
+          radial-gradient(circle at 58% 78%, transparent 0 96px, rgba(120, 168, 161, 0.032) 96px 98px, transparent 98px 132px, rgba(120, 168, 161, 0.022) 132px 134px, transparent 134px);
+        filter: blur(10px);
+        opacity: 0.68;
       }
 
       main {
@@ -106,7 +127,10 @@ const posts = (await getCollection("blog"))
         background:
           linear-gradient(180deg, rgba(10, 12, 12, 0.92), rgba(8, 10, 10, 0.8)),
           var(--panel);
-        box-shadow: 0 18px 46px var(--shadow);
+        box-shadow:
+          0 18px 46px var(--shadow),
+          0 0 0 1px rgba(127, 169, 199, 0.05),
+          0 0 28px rgba(134, 193, 157, 0.08);
         border-radius: 0;
       }
 
@@ -176,7 +200,9 @@ const posts = (await getCollection("blog"))
           linear-gradient(180deg, rgba(12, 15, 14, 0.92), rgba(9, 11, 11, 0.84)),
           var(--panel-soft);
         border-radius: 0;
-        box-shadow: 0 14px 34px rgba(0, 0, 0, 0.2);
+        box-shadow:
+          0 14px 34px rgba(0, 0, 0, 0.2),
+          0 0 18px rgba(134, 193, 157, 0.04);
       }
 
       .post-card h2 {
@@ -192,6 +218,10 @@ const posts = (await getCollection("blog"))
       .post-meta {
         color: var(--muted);
         font-size: 0.84rem;
+      }
+
+      .post-card:nth-child(2n) .post-meta {
+        color: color-mix(in srgb, var(--muted) 76%, var(--accent-2) 24%);
       }
 
       .empty {

@@ -53,6 +53,7 @@ const updated = formatDate(frontmatter.updatedDate);
         --signal-dim: #5d7f6a;
         --code-bg: rgba(9, 11, 11, 0.96);
         --quote: #78a8a1;
+        --accent-2: #7fa9c7;
         --shadow: rgba(0, 0, 0, 0.4);
         font-family: "IBM Plex Mono", "Courier New", monospace;
         line-height: 1.72;
@@ -66,8 +67,10 @@ const updated = formatDate(frontmatter.updatedDate);
           radial-gradient(circle at 18% 16%, var(--bg-haze), transparent 22%),
           radial-gradient(circle at 72% 10%, var(--bg-haze-2), transparent 18%),
           radial-gradient(circle at 50% 85%, rgba(120, 168, 161, 0.05), transparent 26%),
+          radial-gradient(circle at 78% 76%, rgba(127, 169, 199, 0.055), transparent 18%),
           linear-gradient(120deg, transparent 0%, rgba(134, 193, 157, 0.03) 24%, transparent 48%),
           linear-gradient(60deg, transparent 0%, rgba(120, 168, 161, 0.025) 28%, transparent 52%),
+          linear-gradient(28deg, transparent 0%, rgba(127, 169, 199, 0.025) 30%, transparent 54%),
           var(--bg);
         position: relative;
       }
@@ -87,9 +90,27 @@ const updated = formatDate(frontmatter.updatedDate);
             circle at 80% 30%,
             rgba(120, 168, 161, 0.035) 0 1px,
             transparent 1px 34px
+          ),
+          repeating-radial-gradient(
+            circle at 62% 74%,
+            rgba(127, 169, 199, 0.028) 0 1px,
+            transparent 1px 40px
           );
         filter: blur(14px);
-        opacity: 0.42;
+        opacity: 0.52;
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(circle at 18% 24%, transparent 0 84px, rgba(134, 193, 157, 0.045) 84px 86px, transparent 86px 116px, rgba(134, 193, 157, 0.03) 116px 118px, transparent 118px),
+          radial-gradient(circle at 72% 28%, transparent 0 112px, rgba(127, 169, 199, 0.036) 112px 114px, transparent 114px 150px, rgba(127, 169, 199, 0.024) 150px 152px, transparent 152px),
+          radial-gradient(circle at 58% 78%, transparent 0 96px, rgba(120, 168, 161, 0.028) 96px 98px, transparent 98px 132px, rgba(120, 168, 161, 0.02) 132px 134px, transparent 134px);
+        filter: blur(10px);
+        opacity: 0.68;
       }
 
       main {
@@ -125,7 +146,10 @@ const updated = formatDate(frontmatter.updatedDate);
         background:
           linear-gradient(180deg, rgba(10, 12, 12, 0.92), rgba(8, 10, 10, 0.82)),
           var(--panel);
-        box-shadow: 0 18px 46px var(--shadow);
+        box-shadow:
+          0 18px 46px var(--shadow),
+          0 0 0 1px rgba(127, 169, 199, 0.05),
+          0 0 24px rgba(134, 193, 157, 0.07);
         border-radius: 0;
       }
 
@@ -156,14 +180,16 @@ const updated = formatDate(frontmatter.updatedDate);
           linear-gradient(180deg, rgba(10, 12, 12, 0.92), rgba(8, 10, 10, 0.84)),
           var(--panel);
         border-radius: 0;
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+        box-shadow:
+          0 16px 40px rgba(0, 0, 0, 0.2),
+          0 0 18px rgba(134, 193, 157, 0.035);
       }
 
       article :global(h2),
       article :global(h3) {
         font-family: "IBM Plex Mono", "Courier New", monospace;
         line-height: 1.2;
-        color: var(--signal);
+        color: color-mix(in srgb, var(--signal) 78%, var(--accent-2) 22%);
       }
 
       article :global(code) {
