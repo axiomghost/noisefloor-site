@@ -1,0 +1,82 @@
+---
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog"))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => {
+    const aTime = a.data.pubDate?.getTime() ?? 0;
+    const bTime = b.data.pubDate?.getTime() ?? 0;
+    return bTime - aTime;
+  });
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Noise Floor</title>
+    <meta
+      name="description"
+      content="Publication target for technical writing packaged from the OpenClaw workspace."
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "Georgia", "Times New Roman", serif;
+        line-height: 1.5;
+      }
+
+      body {
+        margin: 0;
+        background: #f7f4ee;
+        color: #1f1a17;
+      }
+
+      main {
+        max-width: 48rem;
+        margin: 0 auto;
+        padding: 4rem 1.5rem 5rem;
+      }
+
+      h1,
+      h2 {
+        line-height: 1.15;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      ul {
+        padding-left: 1.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p>Noise Floor</p>
+      <h1>Publication infrastructure is live.</h1>
+      <p>
+        This Astro site is the packaging layer for reviewed technical writing.
+        Source truth stays in the workspace docs until it is intentionally
+        prepared for publication.
+      </p>
+
+      <h2>Posts</h2>
+      {
+        posts.length > 0 ? (
+          <ul>
+            {posts.map((post) => (
+              <li>
+                <a href={`/blog/${post.slug}/`}>{post.data.title}</a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No public posts yet.</p>
+        )
+      }
+    </main>
+  </body>
+</html>

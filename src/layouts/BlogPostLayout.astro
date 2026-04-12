@@ -1,0 +1,98 @@
+---
+interface Frontmatter {
+  title: string;
+  description?: string;
+  pubDate?: Date;
+  updatedDate?: Date;
+  tags?: string[];
+}
+
+const { frontmatter } = Astro.props as { frontmatter: Frontmatter };
+
+const formatDate = (value?: Date) =>
+  value
+    ? new Intl.DateTimeFormat("en", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }).format(value)
+    : null;
+
+const published = formatDate(frontmatter.pubDate);
+const updated = formatDate(frontmatter.updatedDate);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{frontmatter.title} | Noise Floor</title>
+    {frontmatter.description && (
+      <meta name="description" content={frontmatter.description} />
+    )}
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "Georgia", "Times New Roman", serif;
+        line-height: 1.6;
+      }
+
+      body {
+        margin: 0;
+        background: #fcfaf6;
+        color: #1f1a17;
+      }
+
+      main {
+        max-width: 48rem;
+        margin: 0 auto;
+        padding: 4rem 1.5rem 5rem;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      header {
+        margin-bottom: 3rem;
+      }
+
+      h1 {
+        line-height: 1.1;
+        margin-bottom: 0.75rem;
+      }
+
+      .meta {
+        color: #5f564f;
+        font-size: 0.95rem;
+      }
+
+      article :global(img) {
+        max-width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p><a href="/">Noise Floor</a></p>
+      <article>
+        <header>
+          <h1>{frontmatter.title}</h1>
+          {frontmatter.description && <p>{frontmatter.description}</p>}
+          {(published || updated || frontmatter.tags?.length) && (
+            <p class="meta">
+              {published && `Published ${published}`}
+              {published && updated && " · "}
+              {updated && `Updated ${updated}`}
+              {(published || updated) && frontmatter.tags?.length ? " · " : ""}
+              {frontmatter.tags?.length ? frontmatter.tags.join(", ") : ""}
+            </p>
+          )}
+        </header>
+        <slot />
+      </article>
+    </main>
+  </body>
+</html>
