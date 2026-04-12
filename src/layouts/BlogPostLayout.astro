@@ -201,7 +201,7 @@ const updated = formatDate(frontmatter.updatedDate);
         top: 2rem;
         padding: 1.2rem 1rem;
         border: 1px solid var(--border);
-        border-top: 1px solid var(--border-strong);
+        border-top: 1px solid var(--signal);
         background:
           linear-gradient(180deg, rgba(8, 8, 14, 0.94), rgba(6, 6, 12, 0.86)),
           var(--panel);
@@ -237,9 +237,9 @@ const updated = formatDate(frontmatter.updatedDate);
 
       .sidebar-tags li {
         padding: 0.15rem 0.45rem;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: #9aa8b4;
+        background: rgba(0, 229, 255, 0.08);
+        border: 1px solid rgba(0, 229, 255, 0.15);
+        color: var(--signal);
         font-size: 0.72rem;
         letter-spacing: 0.03em;
       }
@@ -275,12 +275,12 @@ const updated = formatDate(frontmatter.updatedDate);
       article :global(h3) {
         font-family: "Space Grotesk", "Arial", sans-serif;
         line-height: 1.2;
-        color: #e0e4ea;
+        color: var(--signal);
         font-weight: 600;
       }
 
       article :global(h2) {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 1px solid rgba(0, 229, 255, 0.1);
         padding-bottom: 0.4rem;
       }
 
@@ -308,7 +308,7 @@ const updated = formatDate(frontmatter.updatedDate);
       article :global(blockquote) {
         margin: 1.4rem 0;
         padding-left: 1rem;
-        border-left: 1px solid rgba(255, 170, 44, 0.35);
+        border-left: 1px solid var(--signal);
         color: #8fa8b8;
       }
 
@@ -338,7 +338,7 @@ const updated = formatDate(frontmatter.updatedDate);
         margin-top: 1.5rem;
         padding: 1.2rem 1.4rem;
         border: 1px solid var(--border);
-        border-top: 1px solid var(--border-strong);
+        border-top: 1px solid var(--signal);
         background:
           linear-gradient(180deg, rgba(8, 8, 14, 0.94), rgba(6, 6, 12, 0.86)),
           var(--panel);
@@ -349,7 +349,7 @@ const updated = formatDate(frontmatter.updatedDate);
         font-family: "Space Grotesk", "Arial", sans-serif;
         font-size: 0.92rem;
         font-weight: 600;
-        color: #e0e4ea;
+        color: var(--signal);
         margin: 0 0 0.8rem;
       }
 
@@ -402,7 +402,7 @@ const updated = formatDate(frontmatter.updatedDate);
 
         .sidebar {
           position: static;
-          border-top: 1px solid var(--border-strong);
+          border-top: 1px solid var(--signal);
         }
 
         article {
