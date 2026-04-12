@@ -116,8 +116,43 @@ const updated = formatDate(frontmatter.updatedDate);
         opacity: 0.65;
       }
 
+      /* Top nav bar */
+      .topbar {
+        position: relative;
+        z-index: 2;
+        border-bottom: 2px solid var(--signal);
+        background:
+          linear-gradient(180deg, rgba(8, 8, 14, 0.96), rgba(6, 6, 12, 0.9));
+        padding: 0.7rem 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 16px rgba(0, 229, 255, 0.04);
+      }
+
+      .topbar a {
+        color: var(--signal);
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.82rem;
+        font-family: "JetBrains Mono", "Courier New", monospace;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: color 0.2s;
+      }
+
+      .topbar a:hover {
+        color: #66ffee;
+      }
+
+      .nf-logo {
+        display: inline-block;
+        width: 22px;
+        height: 26px;
+        vertical-align: middle;
+      }
+
       main {
-        max-width: 88rem;
+        max-width: 50rem;
         margin: 0 auto;
         padding: 2.4rem 2rem 5rem;
         position: relative;
@@ -133,25 +168,6 @@ const updated = formatDate(frontmatter.updatedDate);
       a:hover {
         color: #66ffee;
         text-decoration: underline;
-      }
-
-      .home {
-        margin: 0 0 1.5rem;
-        color: var(--signal);
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        font-size: 0.82rem;
-        font-family: "JetBrains Mono", "Courier New", monospace;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .nf-logo {
-        display: inline-block;
-        width: 24px;
-        height: 28px;
-        vertical-align: middle;
       }
 
       header {
@@ -191,8 +207,9 @@ const updated = formatDate(frontmatter.updatedDate);
       }
 
       article {
-        padding: 1.5rem 1.4rem 1.8rem;
+        padding: 1.5rem 1.6rem 1.8rem 1.8rem;
         border: 1px solid var(--border);
+        border-left: 3px solid var(--accent);
         background:
           linear-gradient(180deg, rgba(8, 8, 14, 0.94), rgba(6, 6, 12, 0.86)),
           var(--panel);
@@ -265,6 +282,10 @@ const updated = formatDate(frontmatter.updatedDate);
       }
 
       @media (max-width: 720px) {
+        .topbar {
+          padding: 0.6rem 1rem;
+        }
+
         main {
           padding: 1.5rem 0.9rem 3rem;
         }
@@ -283,20 +304,20 @@ const updated = formatDate(frontmatter.updatedDate);
     </style>
   </head>
   <body>
+    <nav class="topbar">
+      <a href={homeHref}>
+        <svg class="nf-logo" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg" aria-label="NF logo">
+          <rect x="0" y="0" width="7" height="52" fill="#00e5ff"/>
+          <polygon points="0,0 9,0 28,44 28,52 19,52 0,8" fill="#00e5ff"/>
+          <rect x="23" y="0" width="5" height="52" fill="#00e5ff"/>
+          <rect x="28" y="0" width="5" height="52" fill="#ff1744"/>
+          <rect x="33" y="0" width="17" height="9" fill="#ff1744"/>
+          <rect x="33" y="22" width="14" height="9" fill="#ff1744"/>
+        </svg>
+        noise-floor
+      </a>
+    </nav>
     <main>
-      <p class="home">
-        <a href={homeHref}>
-          <svg class="nf-logo" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg" aria-label="NF logo">
-            <rect x="0" y="0" width="7" height="52" fill="#00e5ff"/>
-            <polygon points="0,0 9,0 28,44 28,52 19,52 0,8" fill="#00e5ff"/>
-            <rect x="23" y="0" width="5" height="52" fill="#00e5ff"/>
-            <rect x="28" y="0" width="5" height="52" fill="#ff1744"/>
-            <rect x="33" y="0" width="17" height="9" fill="#ff1744"/>
-            <rect x="33" y="22" width="14" height="9" fill="#ff1744"/>
-          </svg>
-          noise-floor
-        </a>
-      </p>
       <article>
         <header>
           <h1>{frontmatter.title}</h1>
