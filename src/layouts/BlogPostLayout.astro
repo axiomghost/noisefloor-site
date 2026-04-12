@@ -41,16 +41,17 @@ const updated = formatDate(frontmatter.updatedDate);
     <style>
       :root {
         color-scheme: dark;
-        --bg: #171b1a;
-        --panel: rgba(27, 31, 30, 0.92);
-        --border: rgba(126, 160, 138, 0.24);
-        --grid: rgba(126, 160, 138, 0.08);
-        --text: #e6e4dd;
-        --muted: #a6ada6;
-        --signal: #9cb6a2;
-        --signal-dim: #73897b;
-        --code-bg: rgba(20, 24, 23, 0.94);
-        --quote: #c8b585;
+        --bg: #17151c;
+        --bg-glow: rgba(120, 109, 169, 0.1);
+        --panel: rgba(31, 28, 37, 0.92);
+        --border: rgba(177, 164, 126, 0.18);
+        --text: #ece6da;
+        --muted: #b4ab9c;
+        --signal: #b7c8ba;
+        --signal-dim: #7d927f;
+        --code-bg: rgba(20, 19, 24, 0.96);
+        --quote: #ceb886;
+        --shadow: rgba(0, 0, 0, 0.34);
         font-family: "Source Serif 4", Georgia, serif;
         line-height: 1.6;
       }
@@ -60,17 +61,16 @@ const updated = formatDate(frontmatter.updatedDate);
         min-height: 100vh;
         color: var(--text);
         background:
-          linear-gradient(rgba(84, 255, 159, 0.04) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(84, 255, 159, 0.04) 1px, transparent 1px),
-          radial-gradient(circle at top, rgba(84, 255, 159, 0.12), transparent 36%),
+          radial-gradient(circle at top, var(--bg-glow), transparent 34%),
+          radial-gradient(circle at 20% 10%, rgba(208, 188, 133, 0.07), transparent 22%),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 28%),
           var(--bg);
-        background-size: 24px 24px, 24px 24px, auto, auto;
       }
 
       main {
-        max-width: 58rem;
+        max-width: 74rem;
         margin: 0 auto;
-        padding: 2.5rem 1.5rem 5rem;
+        padding: 2.8rem 2rem 6rem;
       }
 
       a {
@@ -84,25 +84,29 @@ const updated = formatDate(frontmatter.updatedDate);
 
       .home {
         margin: 0 0 1.5rem;
-        color: var(--signal);
+        color: var(--quote);
         text-transform: uppercase;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.12em;
         font-size: 0.82rem;
         font-family: "IBM Plex Mono", "Courier New", monospace;
       }
 
       header {
         margin-bottom: 2rem;
-        padding: 1rem 1.2rem 1.25rem;
+        padding: 1.5rem 1.7rem 1.6rem;
         border: 1px solid var(--border);
-        background: linear-gradient(180deg, rgba(7, 20, 15, 0.96), rgba(7, 20, 15, 0.78));
-        box-shadow: 0 0 0 1px rgba(84, 255, 159, 0.05), 0 18px 60px rgba(0, 0, 0, 0.32);
+        background:
+          linear-gradient(180deg, rgba(57, 51, 70, 0.28), rgba(24, 22, 30, 0.92)),
+          var(--panel);
+        box-shadow: 0 24px 70px var(--shadow);
+        border-radius: 22px;
       }
 
       h1 {
         line-height: 1.1;
         margin: 0 0 0.75rem;
-        font-size: clamp(2rem, 6vw, 3.6rem);
+        font-size: clamp(2.4rem, 5vw, 4.2rem);
+        max-width: 18ch;
       }
 
       .meta {
@@ -113,20 +117,22 @@ const updated = formatDate(frontmatter.updatedDate);
 
       .description {
         color: #bfd0c0;
-        font-size: 1.04rem;
+        font-size: 1.08rem;
       }
 
       article {
-        padding: 1.5rem 1.2rem 2rem;
+        padding: 2rem 1.8rem 2.2rem;
         border: 1px solid var(--border);
         background: var(--panel);
+        border-radius: 22px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.24);
       }
 
       article :global(h2),
       article :global(h3) {
         font-family: "IBM Plex Mono", "Courier New", monospace;
         line-height: 1.2;
-        color: var(--signal);
+        color: var(--quote);
       }
 
       article :global(code) {
@@ -169,6 +175,24 @@ const updated = formatDate(frontmatter.updatedDate);
       article :global(img) {
         max-width: 100%;
         height: auto;
+      }
+
+      @media (max-width: 720px) {
+        main {
+          padding: 2rem 1rem 4rem;
+        }
+
+        header,
+        article {
+          padding-left: 1.2rem;
+          padding-right: 1.2rem;
+          border-radius: 18px;
+        }
+
+        h1 {
+          max-width: 100%;
+          font-size: clamp(2.1rem, 10vw, 3.3rem);
+        }
       }
     </style>
   </head>
