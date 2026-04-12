@@ -41,17 +41,17 @@ const updated = formatDate(frontmatter.updatedDate);
     <style>
       :root {
         color-scheme: dark;
-        --bg: #17151c;
-        --bg-glow: rgba(120, 109, 169, 0.1);
-        --panel: rgba(31, 28, 37, 0.92);
-        --border: rgba(177, 164, 126, 0.18);
-        --text: #ece6da;
-        --muted: #b4ab9c;
-        --signal: #b7c8ba;
-        --signal-dim: #7d927f;
-        --code-bg: rgba(20, 19, 24, 0.96);
-        --quote: #ceb886;
-        --shadow: rgba(0, 0, 0, 0.34);
+        --bg: #12161c;
+        --bg-top: #1a2029;
+        --panel: rgba(23, 29, 37, 0.92);
+        --border: rgba(126, 145, 168, 0.22);
+        --text: #ebeff4;
+        --muted: #9eacbc;
+        --signal: #8fb8c4;
+        --signal-dim: #6f8898;
+        --code-bg: rgba(17, 22, 28, 0.96);
+        --quote: #b7c9a8;
+        --shadow: rgba(0, 0, 0, 0.28);
         font-family: "Source Serif 4", Georgia, serif;
         line-height: 1.6;
       }
@@ -61,10 +61,8 @@ const updated = formatDate(frontmatter.updatedDate);
         min-height: 100vh;
         color: var(--text);
         background:
-          radial-gradient(circle at top, var(--bg-glow), transparent 34%),
-          radial-gradient(circle at 20% 10%, rgba(208, 188, 133, 0.07), transparent 22%),
-          linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 28%),
-          var(--bg);
+          linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 22%),
+          linear-gradient(180deg, var(--bg-top), var(--bg));
       }
 
       main {
@@ -84,9 +82,9 @@ const updated = formatDate(frontmatter.updatedDate);
 
       .home {
         margin: 0 0 1.5rem;
-        color: var(--quote);
+        color: var(--signal);
         text-transform: uppercase;
-        letter-spacing: 0.12em;
+        letter-spacing: 0.08em;
         font-size: 0.82rem;
         font-family: "IBM Plex Mono", "Courier New", monospace;
       }
@@ -95,11 +93,9 @@ const updated = formatDate(frontmatter.updatedDate);
         margin-bottom: 2rem;
         padding: 1.5rem 1.7rem 1.6rem;
         border: 1px solid var(--border);
-        background:
-          linear-gradient(180deg, rgba(57, 51, 70, 0.28), rgba(24, 22, 30, 0.92)),
-          var(--panel);
-        box-shadow: 0 24px 70px var(--shadow);
-        border-radius: 22px;
+        background: var(--panel);
+        box-shadow: 0 18px 48px var(--shadow);
+        border-radius: 16px;
       }
 
       h1 {
@@ -116,7 +112,7 @@ const updated = formatDate(frontmatter.updatedDate);
       }
 
       .description {
-        color: #bfd0c0;
+        color: #cad5df;
         font-size: 1.08rem;
       }
 
@@ -124,21 +120,21 @@ const updated = formatDate(frontmatter.updatedDate);
         padding: 2rem 1.8rem 2.2rem;
         border: 1px solid var(--border);
         background: var(--panel);
-        border-radius: 22px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.24);
+        border-radius: 16px;
+        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.18);
       }
 
       article :global(h2),
       article :global(h3) {
         font-family: "IBM Plex Mono", "Courier New", monospace;
         line-height: 1.2;
-        color: var(--quote);
+        color: var(--signal);
       }
 
       article :global(code) {
         font-family: "IBM Plex Mono", "Courier New", monospace;
         font-size: 0.92em;
-        background: rgba(156, 182, 162, 0.1);
+        background: rgba(143, 184, 196, 0.1);
         padding: 0.12rem 0.32rem;
       }
 
