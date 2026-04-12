@@ -1,0 +1,7 @@
+<svg viewBox="0 0 50 52" xmlns="http://www.w3.org/2000/svg" aria-label="NF logo">
+  <rect x="0" y="0" width="7" height="52" fill="#00e5ff"/>
+  <polygon points="0,0 9,0 31,44 31,52 22,52 0,8" fill="#00e5ff"/>
+  <rect x="24" y="0" width="7" height="52" fill="#00e5ff"/>
+  <rect x="31" y="0" width="19" height="9" fill="#ff3366"/>
+  <rect x="31" y="22" width="16" height="9" fill="#ff3366"/>
+</svg>
