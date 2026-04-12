@@ -32,20 +32,26 @@ const updated = formatDate(frontmatter.updatedDate);
     {frontmatter.description && (
       <meta name="description" content={frontmatter.description} />
     )}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
         color-scheme: dark;
-        --bg: #07100c;
-        --panel: rgba(7, 20, 15, 0.88);
-        --border: rgba(84, 255, 159, 0.24);
-        --grid: rgba(84, 255, 159, 0.08);
-        --text: #d8e7d7;
-        --muted: #92a699;
-        --signal: #54ff9f;
-        --signal-dim: #2fb970;
-        --code-bg: rgba(5, 15, 11, 0.92);
-        --quote: #f1c96b;
-        font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+        --bg: #171b1a;
+        --panel: rgba(27, 31, 30, 0.92);
+        --border: rgba(126, 160, 138, 0.24);
+        --grid: rgba(126, 160, 138, 0.08);
+        --text: #e6e4dd;
+        --muted: #a6ada6;
+        --signal: #9cb6a2;
+        --signal-dim: #73897b;
+        --code-bg: rgba(20, 24, 23, 0.94);
+        --quote: #c8b585;
+        font-family: "Source Serif 4", Georgia, serif;
         line-height: 1.6;
       }
 
@@ -80,9 +86,9 @@ const updated = formatDate(frontmatter.updatedDate);
         margin: 0 0 1.5rem;
         color: var(--signal);
         text-transform: uppercase;
-        letter-spacing: 0.12em;
+        letter-spacing: 0.08em;
         font-size: 0.82rem;
-        font-family: "Courier New", "Lucida Console", monospace;
+        font-family: "IBM Plex Mono", "Courier New", monospace;
       }
 
       header {
@@ -102,7 +108,7 @@ const updated = formatDate(frontmatter.updatedDate);
       .meta {
         color: var(--muted);
         font-size: 0.9rem;
-        font-family: "Courier New", "Lucida Console", monospace;
+        font-family: "IBM Plex Mono", "Courier New", monospace;
       }
 
       .description {
@@ -118,15 +124,15 @@ const updated = formatDate(frontmatter.updatedDate);
 
       article :global(h2),
       article :global(h3) {
-        font-family: "Courier New", "Lucida Console", monospace;
+        font-family: "IBM Plex Mono", "Courier New", monospace;
         line-height: 1.2;
         color: var(--signal);
       }
 
       article :global(code) {
-        font-family: "Courier New", "Lucida Console", monospace;
+        font-family: "IBM Plex Mono", "Courier New", monospace;
         font-size: 0.92em;
-        background: rgba(84, 255, 159, 0.08);
+        background: rgba(156, 182, 162, 0.1);
         padding: 0.12rem 0.32rem;
       }
 
