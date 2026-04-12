@@ -24,28 +24,30 @@ const posts = (await getCollection("blog"))
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
         color-scheme: dark;
-        --bg: #040505;
-        --bg-haze: rgba(71, 126, 95, 0.12);
-        --bg-haze-2: rgba(92, 132, 118, 0.08);
-        --panel: rgba(8, 10, 10, 0.86);
-        --panel-soft: rgba(10, 12, 12, 0.78);
-        --border: rgba(89, 122, 104, 0.34);
-        --border-strong: rgba(134, 193, 157, 0.4);
-        --text: #d8dedb;
-        --muted: #8b9891;
-        --signal: #86c19d;
-        --signal-strong: #b9e0c7;
-        --signal-dim: #5d7f6a;
-        --accent: #78a8a1;
-        --accent-2: #7fa9c7;
-        --shadow: rgba(0, 0, 0, 0.42);
-        font-family: "IBM Plex Mono", "Courier New", monospace;
+        --bg: #050507;
+        --bg-haze: rgba(0, 229, 255, 0.08);
+        --bg-haze-2: rgba(255, 51, 102, 0.05);
+        --bg-haze-3: rgba(0, 255, 159, 0.04);
+        --panel: rgba(8, 8, 14, 0.9);
+        --panel-soft: rgba(10, 10, 16, 0.82);
+        --border: rgba(0, 229, 255, 0.18);
+        --border-strong: rgba(0, 229, 255, 0.35);
+        --text: #e4e8ef;
+        --muted: #6b7a8a;
+        --signal: #00e5ff;
+        --signal-strong: #66ffee;
+        --signal-dim: #0099aa;
+        --accent: #ff3366;
+        --accent-2: #ffaa2c;
+        --accent-3: #00ff9f;
+        --shadow: rgba(0, 0, 0, 0.5);
+        font-family: "JetBrains Mono", "Courier New", monospace;
         line-height: 1.7;
       }
 
@@ -54,13 +56,13 @@ const posts = (await getCollection("blog"))
         min-height: 100vh;
         color: var(--text);
         background:
-          radial-gradient(circle at 18% 16%, var(--bg-haze), transparent 22%),
-          radial-gradient(circle at 72% 10%, var(--bg-haze-2), transparent 18%),
-          radial-gradient(circle at 50% 85%, rgba(120, 168, 161, 0.05), transparent 26%),
-          radial-gradient(circle at 78% 76%, rgba(127, 169, 199, 0.06), transparent 18%),
-          linear-gradient(120deg, transparent 0%, rgba(134, 193, 157, 0.035) 24%, transparent 48%),
-          linear-gradient(60deg, transparent 0%, rgba(120, 168, 161, 0.03) 28%, transparent 52%),
-          linear-gradient(28deg, transparent 0%, rgba(127, 169, 199, 0.028) 30%, transparent 54%),
+          radial-gradient(circle at 15% 12%, var(--bg-haze), transparent 28%),
+          radial-gradient(circle at 75% 8%, var(--bg-haze-2), transparent 22%),
+          radial-gradient(circle at 50% 80%, var(--bg-haze-3), transparent 30%),
+          radial-gradient(circle at 85% 70%, rgba(255, 170, 44, 0.03), transparent 20%),
+          linear-gradient(135deg, transparent 0%, rgba(0, 229, 255, 0.03) 20%, transparent 45%),
+          linear-gradient(45deg, transparent 0%, rgba(255, 51, 102, 0.02) 25%, transparent 50%),
+          linear-gradient(200deg, transparent 0%, rgba(0, 255, 159, 0.02) 30%, transparent 55%),
           var(--bg);
         position: relative;
       }
@@ -72,22 +74,22 @@ const posts = (await getCollection("blog"))
         pointer-events: none;
         background:
           repeating-radial-gradient(
-            circle at 15% 20%,
-            rgba(134, 193, 157, 0.055) 0 1px,
-            transparent 1px 28px
+            circle at 12% 18%,
+            rgba(0, 229, 255, 0.04) 0 1px,
+            transparent 1px 30px
           ),
           repeating-radial-gradient(
-            circle at 80% 30%,
-            rgba(120, 168, 161, 0.04) 0 1px,
-            transparent 1px 34px
+            circle at 82% 25%,
+            rgba(255, 51, 102, 0.025) 0 1px,
+            transparent 1px 36px
           ),
           repeating-radial-gradient(
-            circle at 62% 74%,
-            rgba(127, 169, 199, 0.032) 0 1px,
-            transparent 1px 40px
+            circle at 55% 72%,
+            rgba(0, 255, 159, 0.02) 0 1px,
+            transparent 1px 42px
           );
-        filter: blur(14px);
-        opacity: 0.55;
+        filter: blur(12px);
+        opacity: 0.6;
       }
 
       body::after {
@@ -96,11 +98,11 @@ const posts = (await getCollection("blog"))
         inset: 0;
         pointer-events: none;
         background:
-          radial-gradient(circle at 18% 24%, transparent 0 84px, rgba(134, 193, 157, 0.05) 84px 86px, transparent 86px 116px, rgba(134, 193, 157, 0.035) 116px 118px, transparent 118px),
-          radial-gradient(circle at 72% 28%, transparent 0 112px, rgba(127, 169, 199, 0.04) 112px 114px, transparent 114px 150px, rgba(127, 169, 199, 0.028) 150px 152px, transparent 152px),
-          radial-gradient(circle at 58% 78%, transparent 0 96px, rgba(120, 168, 161, 0.032) 96px 98px, transparent 98px 132px, rgba(120, 168, 161, 0.022) 132px 134px, transparent 134px);
+          radial-gradient(circle at 18% 22%, transparent 0 80px, rgba(0, 229, 255, 0.04) 80px 82px, transparent 82px 120px, rgba(0, 229, 255, 0.025) 120px 122px, transparent 122px),
+          radial-gradient(circle at 75% 30%, transparent 0 100px, rgba(255, 51, 102, 0.03) 100px 102px, transparent 102px 145px, rgba(255, 51, 102, 0.018) 145px 147px, transparent 147px),
+          radial-gradient(circle at 55% 75%, transparent 0 90px, rgba(0, 255, 159, 0.025) 90px 92px, transparent 92px 130px, rgba(0, 255, 159, 0.015) 130px 132px, transparent 132px);
         filter: blur(10px);
-        opacity: 0.68;
+        opacity: 0.7;
       }
 
       main {
@@ -114,43 +116,76 @@ const posts = (await getCollection("blog"))
       a {
         color: var(--signal);
         text-decoration: none;
+        transition: color 0.2s;
       }
 
       a:hover {
+        color: var(--signal-strong);
         text-decoration: underline;
       }
 
       .masthead {
         margin-bottom: 2.5rem;
-        padding: 1.5rem 1.6rem;
+        padding: 2rem 2rem 1.8rem;
         border: 1px solid var(--border-strong);
         background:
-          linear-gradient(180deg, rgba(10, 12, 12, 0.92), rgba(8, 10, 10, 0.8)),
+          linear-gradient(180deg, rgba(8, 8, 14, 0.94), rgba(6, 6, 12, 0.85)),
           var(--panel);
         box-shadow:
-          0 18px 46px var(--shadow),
-          0 0 0 1px rgba(127, 169, 199, 0.05),
-          0 0 28px rgba(134, 193, 157, 0.08);
+          0 20px 50px var(--shadow),
+          0 0 0 1px rgba(0, 229, 255, 0.06),
+          0 0 40px rgba(0, 229, 255, 0.06),
+          0 0 80px rgba(255, 51, 102, 0.03);
         border-radius: 0;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* NF watermark behind masthead */
+      .masthead::before {
+        content: "";
+        position: absolute;
+        top: -20px;
+        right: -10px;
+        width: 220px;
+        height: 260px;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 46 52' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='0' width='7' height='52' fill='%2300e5ff'/%3E%3Cpolygon points='0,0 9,0 31,44 31,52 22,52 0,8' fill='%2300e5ff'/%3E%3Crect x='24' y='0' width='7' height='52' fill='%2300e5ff'/%3E%3Crect x='31' y='0' width='15' height='7' fill='%23ff3366'/%3E%3Crect x='31' y='22' width='12' height='7' fill='%23ff3366'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-size: contain;
+        opacity: 0.045;
+        pointer-events: none;
+      }
+
+      .nf-logo {
+        display: inline-block;
+        width: 38px;
+        height: 44px;
+        vertical-align: middle;
+        margin-right: 0.6rem;
+        position: relative;
+        top: -2px;
       }
 
       .kicker,
       .meta,
       .post-meta,
       .empty {
-        font-family: "IBM Plex Mono", "Courier New", monospace;
+        font-family: "JetBrains Mono", "Courier New", monospace;
       }
 
       .kicker {
-        color: var(--accent);
+        color: var(--signal);
         text-transform: uppercase;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.1em;
         font-size: 0.76rem;
         margin: 0 0 0.9rem;
+        display: flex;
+        align-items: center;
       }
 
       h1,
       h2 {
+        font-family: "Space Grotesk", "Arial", sans-serif;
         line-height: 1.22;
       }
 
@@ -159,13 +194,13 @@ const posts = (await getCollection("blog"))
         margin: 0;
         max-width: 26ch;
         color: var(--signal-strong);
-        font-weight: 600;
+        font-weight: 700;
       }
 
       .lede {
         max-width: 72rem;
         color: var(--muted);
-        font-size: 0.98rem;
+        font-size: 0.95rem;
         margin: 1rem 0 0;
       }
 
@@ -175,13 +210,29 @@ const posts = (await getCollection("blog"))
         font-size: 0.8rem;
       }
 
+      .meta .status-dot {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background: var(--accent-3);
+        border-radius: 50%;
+        margin-right: 0.4rem;
+        box-shadow: 0 0 6px var(--accent-3);
+        animation: pulse-dot 2.5s ease-in-out infinite;
+      }
+
+      @keyframes pulse-dot {
+        0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--accent-3); }
+        50% { opacity: 0.5; box-shadow: 0 0 2px var(--accent-3); }
+      }
+
       .section-title {
         margin: 2rem 0 1rem;
-        color: var(--signal);
+        color: var(--accent);
         text-transform: uppercase;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.1em;
         font-size: 0.84rem;
-        font-family: "IBM Plex Mono", "Courier New", monospace;
+        font-family: "JetBrains Mono", "Courier New", monospace;
       }
 
       .post-list {
@@ -197,18 +248,26 @@ const posts = (await getCollection("blog"))
         padding: 1.15rem 1.2rem 1.2rem;
         border: 1px solid var(--border);
         background:
-          linear-gradient(180deg, rgba(12, 15, 14, 0.92), rgba(9, 11, 11, 0.84)),
+          linear-gradient(180deg, rgba(10, 10, 16, 0.94), rgba(7, 7, 12, 0.86)),
           var(--panel-soft);
         border-radius: 0;
         box-shadow:
-          0 14px 34px rgba(0, 0, 0, 0.2),
-          0 0 18px rgba(134, 193, 157, 0.04);
+          0 14px 34px rgba(0, 0, 0, 0.25),
+          0 0 20px rgba(0, 229, 255, 0.03);
+        transition: border-color 0.25s, box-shadow 0.25s;
+      }
+
+      .post-card:hover {
+        border-color: var(--border-strong);
+        box-shadow:
+          0 14px 34px rgba(0, 0, 0, 0.3),
+          0 0 30px rgba(0, 229, 255, 0.06);
       }
 
       .post-card h2 {
         margin: 0 0 0.4rem;
-        font-size: 1.02rem;
-        font-weight: 500;
+        font-size: 1.08rem;
+        font-weight: 600;
       }
 
       .post-card p {
@@ -221,7 +280,11 @@ const posts = (await getCollection("blog"))
       }
 
       .post-card:nth-child(2n) .post-meta {
-        color: color-mix(in srgb, var(--muted) 76%, var(--accent-2) 24%);
+        color: color-mix(in srgb, var(--muted) 70%, var(--accent-2) 30%);
+      }
+
+      .post-card:nth-child(3n) .post-meta {
+        color: color-mix(in srgb, var(--muted) 70%, var(--accent) 30%);
       }
 
       .empty {
@@ -230,7 +293,7 @@ const posts = (await getCollection("blog"))
       }
 
       .sigil {
-        color: var(--signal);
+        color: var(--accent);
         margin-right: 0.45rem;
       }
 
@@ -243,6 +306,13 @@ const posts = (await getCollection("blog"))
           padding: 1.15rem 1rem;
         }
 
+        .masthead::before {
+          width: 140px;
+          height: 170px;
+          top: -10px;
+          right: -5px;
+        }
+
         h1 {
           max-width: 100%;
           font-size: clamp(1.45rem, 6.5vw, 2rem);
@@ -253,14 +323,23 @@ const posts = (await getCollection("blog"))
   <body>
     <main>
       <section class="masthead">
-        <p class="kicker">noise-floor // journal index</p>
+        <p class="kicker">
+          <svg class="nf-logo" viewBox="0 0 46 52" xmlns="http://www.w3.org/2000/svg" aria-label="NF logo">
+            <rect x="0" y="0" width="7" height="52" fill="#00e5ff"/>
+            <polygon points="0,0 9,0 31,44 31,52 22,52 0,8" fill="#00e5ff"/>
+            <rect x="24" y="0" width="7" height="52" fill="#00e5ff"/>
+            <rect x="31" y="0" width="15" height="7" fill="#ff3366"/>
+            <rect x="31" y="22" width="12" height="7" fill="#ff3366"/>
+          </svg>
+          noise-floor // journal index
+        </p>
         <h1>Field notes for code, systems, and the things that break in interesting ways.</h1>
         <p class="lede">
           A sparse technical journal with clean edges, quiet contrast, and just
           enough green signal in the dark. Source truth stays in the workspace
           until a post is intentionally packaged here.
         </p>
-        <p class="meta">status: online · layout: boxed · theme: monochrome-signal</p>
+        <p class="meta"><span class="status-dot"></span>status: online · layout: boxed · theme: signal-electric</p>
       </section>
 
       <p class="section-title">Published Notes</p>
