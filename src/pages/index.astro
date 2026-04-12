@@ -23,59 +23,176 @@ const posts = (await getCollection("blog"))
     />
     <style>
       :root {
-        color-scheme: light;
-        font-family: "Georgia", "Times New Roman", serif;
-        line-height: 1.5;
+        color-scheme: dark;
+        --bg: #08110d;
+        --panel: rgba(7, 20, 15, 0.88);
+        --grid: rgba(84, 255, 159, 0.08);
+        --border: rgba(84, 255, 159, 0.28);
+        --text: #d7e8d8;
+        --muted: #93a99a;
+        --signal: #54ff9f;
+        --signal-dim: #2fb970;
+        --warning: #f4c15d;
+        font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+        line-height: 1.6;
       }
 
       body {
         margin: 0;
-        background: #f7f4ee;
-        color: #1f1a17;
+        min-height: 100vh;
+        color: var(--text);
+        background:
+          linear-gradient(rgba(84, 255, 159, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(84, 255, 159, 0.04) 1px, transparent 1px),
+          radial-gradient(circle at top, rgba(84, 255, 159, 0.14), transparent 38%),
+          var(--bg);
+        background-size: 24px 24px, 24px 24px, auto, auto;
       }
 
       main {
-        max-width: 48rem;
+        max-width: 58rem;
         margin: 0 auto;
-        padding: 4rem 1.5rem 5rem;
+        padding: 3rem 1.5rem 5rem;
+      }
+
+      a {
+        color: var(--signal);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .masthead {
+        margin-bottom: 2rem;
+        padding: 1rem 1.2rem;
+        border: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(7, 20, 15, 0.96), rgba(7, 20, 15, 0.76));
+        box-shadow: 0 0 0 1px rgba(84, 255, 159, 0.05), 0 18px 60px rgba(0, 0, 0, 0.35);
+      }
+
+      .kicker,
+      .meta,
+      .post-meta,
+      .empty {
+        font-family: "Courier New", "Lucida Console", monospace;
+      }
+
+      .kicker {
+        color: var(--signal);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.78rem;
+        margin: 0 0 0.75rem;
       }
 
       h1,
       h2 {
-        line-height: 1.15;
+        line-height: 1.1;
       }
 
-      a {
-        color: inherit;
+      h1 {
+        font-size: clamp(2.4rem, 7vw, 4.6rem);
+        margin: 0;
+        max-width: 12ch;
       }
 
-      ul {
-        padding-left: 1.25rem;
+      .lede {
+        max-width: 52rem;
+        color: var(--muted);
+        font-size: 1.05rem;
+        margin: 1rem 0 0;
+      }
+
+      .meta {
+        margin-top: 1.25rem;
+        color: var(--warning);
+        font-size: 0.86rem;
+      }
+
+      .section-title {
+        margin: 2rem 0 0.75rem;
+        color: var(--signal);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.84rem;
+        font-family: "Courier New", "Lucida Console", monospace;
+      }
+
+      .post-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 1rem;
+      }
+
+      .post-card {
+        padding: 1rem 1.1rem 1.1rem;
+        border: 1px solid var(--border);
+        background: var(--panel);
+      }
+
+      .post-card h2 {
+        margin: 0 0 0.4rem;
+        font-size: 1.35rem;
+      }
+
+      .post-card p {
+        margin: 0.45rem 0;
+      }
+
+      .post-meta {
+        color: var(--muted);
+        font-size: 0.84rem;
+      }
+
+      .empty {
+        margin-top: 0;
+        color: var(--muted);
+      }
+
+      .sigil {
+        color: var(--signal-dim);
+        margin-right: 0.45rem;
       }
     </style>
   </head>
   <body>
     <main>
-      <p>noise-floor</p>
-      <h1>Publication infrastructure is live.</h1>
-      <p>
-        This Astro site is the packaging layer for reviewed technical writing.
-        Source truth stays in the workspace docs until it is intentionally
-        prepared for publication.
-      </p>
+      <section class="masthead">
+        <p class="kicker">noise-floor // system log</p>
+        <h1>Old-school signal, modern build pipeline.</h1>
+        <p class="lede">
+          Technical notes, failure analysis, and build logs with minimal chrome
+          and no marketing lacquer. Source truth stays in the workspace until a
+          post is intentionally packaged here.
+        </p>
+        <p class="meta">status: online · medium: astro · mode: public notebook</p>
+      </section>
 
-      <h2>Posts</h2>
+      <p class="section-title">Published Notes</p>
       {
         posts.length > 0 ? (
-          <ul>
+          <ul class="post-list">
             {posts.map((post) => (
-              <li>
-                <a href={`${baseUrl}blog/${post.slug}/`}>{post.data.title}</a>
+              <li class="post-card">
+                <p class="post-meta">
+                  <span class="sigil">&gt;</span>
+                  {post.data.pubDate?.toISOString().slice(0, 10) ?? "undated"}
+                  {post.data.tags.length > 0 && ` // ${post.data.tags.join(" · ")}`}
+                </p>
+                <h2>
+                  <a href={`${baseUrl}blog/${post.slug}/`}>{post.data.title}</a>
+                </h2>
+                {post.data.description && <p>{post.data.description}</p>}
+                {post.data.thesis && <p class="post-meta">thesis: {post.data.thesis}</p>}
               </li>
             ))}
           </ul>
         ) : (
-          <p>No public posts yet.</p>
+          <p class="empty">No public posts yet.</p>
         )
       }
     </main>

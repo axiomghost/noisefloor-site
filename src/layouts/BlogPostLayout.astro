@@ -34,39 +34,130 @@ const updated = formatDate(frontmatter.updatedDate);
     )}
     <style>
       :root {
-        color-scheme: light;
-        font-family: "Georgia", "Times New Roman", serif;
+        color-scheme: dark;
+        --bg: #07100c;
+        --panel: rgba(7, 20, 15, 0.88);
+        --border: rgba(84, 255, 159, 0.24);
+        --grid: rgba(84, 255, 159, 0.08);
+        --text: #d8e7d7;
+        --muted: #92a699;
+        --signal: #54ff9f;
+        --signal-dim: #2fb970;
+        --code-bg: rgba(5, 15, 11, 0.92);
+        --quote: #f1c96b;
+        font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
         line-height: 1.6;
       }
 
       body {
         margin: 0;
-        background: #fcfaf6;
-        color: #1f1a17;
+        min-height: 100vh;
+        color: var(--text);
+        background:
+          linear-gradient(rgba(84, 255, 159, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(84, 255, 159, 0.04) 1px, transparent 1px),
+          radial-gradient(circle at top, rgba(84, 255, 159, 0.12), transparent 36%),
+          var(--bg);
+        background-size: 24px 24px, 24px 24px, auto, auto;
       }
 
       main {
-        max-width: 48rem;
+        max-width: 58rem;
         margin: 0 auto;
-        padding: 4rem 1.5rem 5rem;
+        padding: 2.5rem 1.5rem 5rem;
       }
 
       a {
-        color: inherit;
+        color: var(--signal);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .home {
+        margin: 0 0 1.5rem;
+        color: var(--signal);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.82rem;
+        font-family: "Courier New", "Lucida Console", monospace;
       }
 
       header {
-        margin-bottom: 3rem;
+        margin-bottom: 2rem;
+        padding: 1rem 1.2rem 1.25rem;
+        border: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(7, 20, 15, 0.96), rgba(7, 20, 15, 0.78));
+        box-shadow: 0 0 0 1px rgba(84, 255, 159, 0.05), 0 18px 60px rgba(0, 0, 0, 0.32);
       }
 
       h1 {
         line-height: 1.1;
-        margin-bottom: 0.75rem;
+        margin: 0 0 0.75rem;
+        font-size: clamp(2rem, 6vw, 3.6rem);
       }
 
       .meta {
-        color: #5f564f;
-        font-size: 0.95rem;
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-family: "Courier New", "Lucida Console", monospace;
+      }
+
+      .description {
+        color: #bfd0c0;
+        font-size: 1.04rem;
+      }
+
+      article {
+        padding: 1.5rem 1.2rem 2rem;
+        border: 1px solid var(--border);
+        background: var(--panel);
+      }
+
+      article :global(h2),
+      article :global(h3) {
+        font-family: "Courier New", "Lucida Console", monospace;
+        line-height: 1.2;
+        color: var(--signal);
+      }
+
+      article :global(code) {
+        font-family: "Courier New", "Lucida Console", monospace;
+        font-size: 0.92em;
+        background: rgba(84, 255, 159, 0.08);
+        padding: 0.12rem 0.32rem;
+      }
+
+      article :global(pre) {
+        overflow-x: auto;
+        padding: 1rem;
+        border: 1px solid var(--border);
+        background: var(--code-bg);
+      }
+
+      article :global(pre code) {
+        background: transparent;
+        padding: 0;
+      }
+
+      article :global(blockquote) {
+        margin: 1.4rem 0;
+        padding-left: 1rem;
+        border-left: 3px solid var(--quote);
+        color: #d8d1b1;
+      }
+
+      article :global(ul),
+      article :global(ol) {
+        padding-left: 1.4rem;
+      }
+
+      article :global(hr) {
+        border: 0;
+        border-top: 1px dashed var(--signal-dim);
+        margin: 2rem 0;
       }
 
       article :global(img) {
@@ -77,11 +168,11 @@ const updated = formatDate(frontmatter.updatedDate);
   </head>
   <body>
     <main>
-      <p><a href={homeHref}>noise-floor</a></p>
+      <p class="home"><a href={homeHref}>noise-floor</a></p>
       <article>
         <header>
           <h1>{frontmatter.title}</h1>
-          {frontmatter.description && <p>{frontmatter.description}</p>}
+          {frontmatter.description && <p class="description">{frontmatter.description}</p>}
           {(published || updated || frontmatter.tags?.length) && (
             <p class="meta">
               {published && `Published ${published}`}
