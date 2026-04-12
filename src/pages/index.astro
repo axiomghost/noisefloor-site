@@ -355,7 +355,7 @@ const posts = (await getCollection("blog"))
                   {post.data.tags.length > 0 && ` // ${post.data.tags.join(" · ")}`}
                 </p>
                 <h2>
-                  <a href={`${baseUrl}blog/${post.slug}/`}>{post.data.title}</a>
+                  <a href={`${baseUrl.replace(/\/$/, '')}/blog/${post.slug}/`}>{post.data.title}</a>
                 </h2>
                 {post.data.description && <p>{post.data.description}</p>}
                 {post.data.thesis && <p class="post-meta">thesis: {post.data.thesis}</p>}
