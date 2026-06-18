@@ -1,4 +1,5 @@
 # Noise Floor Site — User Guide
+https://axiomghost.github.io/noisefloor-site/
 
 This site directory is the publication target for Noise Floor.
 
