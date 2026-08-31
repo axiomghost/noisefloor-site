@@ -1,0 +1,17 @@
+[
+  {
+    "slug": "statistical-signal-processing",
+    "name": "Statistical signal processing",
+    "description": "Inference, estimation, detection, and localization from noisy measurements."
+  },
+  {
+    "slug": "3d-visualizations-physical-world-modeling",
+    "name": "3D visualizations and physical world modeling",
+    "description": "Spatial interfaces, 3D scenes, and models of the physical world."
+  },
+  {
+    "slug": "wireless-communication",
+    "name": "Wireless communication",
+    "description": "Radio systems, standards, networks, and wireless infrastructure."
+  }
+]

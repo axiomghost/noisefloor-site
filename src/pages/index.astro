@@ -1,14 +1,11 @@
 ---
-import { getCollection } from "astro:content";
+import { fileContent } from "../content.generated";
 
 const baseUrl = import.meta.env.BASE_URL;
-const posts = (await getCollection("blog"))
-  .filter((post) => !post.data.draft)
-  .sort((a, b) => {
-    const aTime = a.data.pubDate?.getTime() ?? 0;
-    const bTime = b.data.pubDate?.getTime() ?? 0;
-    return bTime - aTime;
-  });
+const projects = fileContent.projects.filter((project) => project.published);
+const posts = fileContent.entries
+  .filter((entry) => entry.published)
+  .sort((a, b) => (b.published_at ?? "").localeCompare(a.published_at ?? ""));
 ---
 
 <!doctype html>
@@ -19,7 +16,7 @@ const posts = (await getCollection("blog"))
     <title>noise-floor</title>
     <meta
       name="description"
-      content="Publication target for technical writing packaged from the OpenClaw workspace."
+      content="A technical journal about code, systems, signal processing, and the things that break in interesting ways."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -235,6 +232,19 @@ const posts = (await getCollection("blog"))
         font-family: "JetBrains Mono", "Courier New", monospace;
       }
 
+      .site-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin: 0 0 2rem;
+        padding: 0.8rem 1rem;
+        border: 1px solid var(--border);
+        background: rgba(0, 229, 255, 0.03);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 0.78rem;
+      }
+
       .post-list {
         list-style: none;
         padding: 0;
@@ -332,12 +342,29 @@ const posts = (await getCollection("blog"))
         </p>
         <h1>Field notes for code, systems, and the things that break in interesting ways.</h1>
         <p class="lede">
-          A sparse technical journal with clean edges, quiet contrast, and just
-          enough green signal in the dark. Source truth stays in the workspace
-          until a post is intentionally packaged here.
+          A technical journal about code, systems, signal processing, and the
+          things that break in interesting ways.
         </p>
         <p class="meta"><span class="status-dot"></span>status: online · layout: boxed · theme: signal-electric</p>
       </section>
+
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href={`${baseUrl}projects/`}>Projects</a>
+        <a href={`${baseUrl}log/`}>Diary</a>
+        <a href={`${baseUrl}about/`}>About</a>
+        <a href={`${baseUrl}contact/`}>Contact</a>
+      </nav>
+
+      <p class="section-title">Projects</p>
+      <ul class="post-list">
+        {projects.map((project) => (
+          <li class="post-card">
+            <p class="post-meta"><span class="sigil">&gt;</span>project // {project.status}</p>
+            <h2><a href={`${baseUrl.replace(/\/$/, '')}/projects/${project.slug}/`}>{project.name}</a></h2>
+            <p>{project.summary}</p>
+          </li>
+        ))}
+      </ul>
 
       <p class="section-title">Published Notes</p>
       {
@@ -347,14 +374,13 @@ const posts = (await getCollection("blog"))
               <li class="post-card">
                 <p class="post-meta">
                   <span class="sigil">&gt;</span>
-                  {post.data.pubDate?.toISOString().slice(0, 10) ?? "undated"}
-                  {post.data.tags.length > 0 && ` // ${post.data.tags.join(" · ")}`}
+                  {post.published_at?.slice(0, 10) ?? "undated"}
+                  {post.tags.length > 0 && ` // ${post.tags.join(" · ")}`}
                 </p>
                 <h2>
-                  <a href={`${baseUrl.replace(/\/$/, '')}/blog/${post.slug}/`}>{post.data.title}</a>
+                  <a href={`${baseUrl.replace(/\/$/, '')}/log/${post.slug}/`}>{post.title}</a>
                 </h2>
-                {post.data.description && <p>{post.data.description}</p>}
-                {post.data.thesis && <p class="post-meta">thesis: {post.data.thesis}</p>}
+                {post.summary && <p>{post.summary}</p>}
               </li>
             ))}
           </ul>

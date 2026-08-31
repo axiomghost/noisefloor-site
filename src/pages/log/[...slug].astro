@@ -1,0 +1,16 @@
+---
+import { fileContent } from "../../content.generated";
+import BlogPostLayout from "../../layouts/BlogPostLayout.astro";
+import ContentBlocks from "../../components/ContentBlocks.astro";
+
+export function getStaticPaths() {
+  return fileContent.entries.filter((entry) => entry.published && entry.slug).map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+---
+
+<BlogPostLayout frontmatter={{ title: entry.title, description: entry.summary, pubDate: entry.published_at ? new Date(entry.published_at) : undefined, tags: entry.tags }}>
+  <p class="post-meta">&gt; {entry.type} // {entry.published_at?.slice(0, 10) ?? "undated"}</p>
+  <ContentBlocks source={entry.body} />
+</BlogPostLayout>

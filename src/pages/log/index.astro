@@ -1,0 +1,19 @@
+---
+import { fileContent } from "../../content.generated";
+import BlogPostLayout from "../../layouts/BlogPostLayout.astro";
+
+const entries = fileContent.entries.filter((entry) => entry.published).sort((a, b) => (b.published_at ?? "").localeCompare(a.published_at ?? ""));
+---
+
+<BlogPostLayout frontmatter={{ title: "Diary", description: "Running notes, project updates, useful shares, and things learned along the way." }}>
+  <p class="post-meta">noise-floor // published notes</p>
+  <ul class="post-list">
+    {entries.map((entry) => (
+      <li class="post-card">
+        <p class="post-meta">&gt; {entry.published_at?.slice(0, 10) ?? "undated"} // {entry.type}</p>
+        <h2><a href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/log/${entry.slug}/`}>{entry.title}</a></h2>
+        {entry.summary && <p>{entry.summary}</p>}
+      </li>
+    ))}
+  </ul>
+</BlogPostLayout>

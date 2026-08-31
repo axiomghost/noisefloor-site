@@ -1,0 +1,16 @@
+---
+import { fileContent } from "../../content.generated";
+import BlogPostLayout from "../../layouts/BlogPostLayout.astro";
+import ContentBlocks from "../../components/ContentBlocks.astro";
+
+export function getStaticPaths() {
+  return fileContent.projects.filter((project) => project.published).map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+const { project } = Astro.props;
+---
+
+<BlogPostLayout frontmatter={{ title: project.name, description: project.summary, tags: project.tags }}>
+  <p class="post-meta">&gt; project // {project.status}</p>
+  <ContentBlocks source={project.body} />
+</BlogPostLayout>

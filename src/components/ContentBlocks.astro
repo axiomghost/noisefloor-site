@@ -1,0 +1,26 @@
+---
+const { source } = Astro.props as { source: string };
+
+const escapeHtml = (value: string) =>
+  value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;");
+
+const inline = (value: string) =>
+  escapeHtml(value)
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/`([^`]+)`/g, "<code>$1</code>");
+
+const blocks = source.split(/\n\s*\n/).filter(Boolean);
+---
+
+<div class="content-blocks">
+  {blocks.map((block) => {
+    const trimmed = block.trim();
+    if (trimmed.startsWith("```") && trimmed.endsWith("```")) {
+      return <pre><code set:html={escapeHtml(trimmed.replace(/^```[^\n]*\n?/, "").replace(/```$/, ""))} /></pre>;
+    }
+    if (trimmed.startsWith("### ")) return <h3 set:html={inline(trimmed.slice(4))} />;
+    if (trimmed.startsWith("## ")) return <h2 set:html={inline(trimmed.slice(3))} />;
+    return <p set:html={inline(trimmed.replace(/\n/g, "<br />"))} />;
+  })}
+</div>

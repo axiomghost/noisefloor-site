@@ -1,0 +1,19 @@
+---
+import { fileContent } from "../../content.generated";
+import BlogPostLayout from "../../layouts/BlogPostLayout.astro";
+
+const projects = fileContent.projects.filter((project) => project.published);
+---
+
+<BlogPostLayout frontmatter={{ title: "Projects", description: "Long-running threads of work: systems, sensing, software, and standards." }}>
+  <p class="post-meta">noise-floor // projects</p>
+  <ul class="post-list">
+    {projects.map((project) => (
+      <li class="post-card">
+        <p class="post-meta">&gt; {project.status} // {project.tags.join(" · ")}</p>
+        <h2><a href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/projects/${project.slug}/`}>{project.name}</a></h2>
+        <p>{project.summary}</p>
+      </li>
+    ))}
+  </ul>
+</BlogPostLayout>

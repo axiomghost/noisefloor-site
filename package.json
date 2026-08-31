@@ -4,8 +4,10 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
+    "generate:content": "node scripts/generate-content.mjs",
     "dev": "astro dev",
     "start": "astro dev",
+    "prebuild": "node scripts/generate-content.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
