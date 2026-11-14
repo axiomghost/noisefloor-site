@@ -4,6 +4,8 @@ slug: background-noise-margin-and-node-density
 summary: The background noise sets how loud the drone must arrive, that sets the range, and the range sets how many nodes a site needs. A 7 dB noisier day can mean three and a half times the nodes.
 type: post
 project: acoustic-localization
+series: drone-hearing
+series_order: 3
 tags: [statistical-signal-processing, acoustics]
 published: true
 published_at: 2026-11-14T12:00:00.000Z

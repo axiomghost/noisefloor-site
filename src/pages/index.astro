@@ -1,11 +1,10 @@
 ---
 import { fileContent } from "../content.generated";
+import { orderDiary } from "../diary-order";
 
 const baseUrl = import.meta.env.BASE_URL;
 const projects = fileContent.projects.filter((project) => project.published);
-const posts = fileContent.entries
-  .filter((entry) => entry.published)
-  .sort((a, b) => (b.published_at ?? "").localeCompare(a.published_at ?? ""));
+const posts = orderDiary(fileContent.entries.filter((entry) => entry.published));
 ---
 
 <!doctype html>

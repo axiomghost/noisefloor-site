@@ -64,6 +64,10 @@ media: []
 Write or paste the complete Markdown article here.
 ```
 
+For posts that should read as a series, use the same `series` slug and give each
+post a `series_order` number starting at 1. Listings keep the series together
+and use its newest publication date to position it among other posts.
+
 To create a file through GitHub, open the repository, choose **Add file →
 Create new file**, enter the path and filename, paste the Markdown, and commit
 directly to `main`. For an existing local file, use **Add file → Upload files**

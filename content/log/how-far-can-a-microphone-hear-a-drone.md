@@ -4,6 +4,8 @@ slug: how-far-can-a-microphone-hear-a-drone
 summary: Spreading sets the range up close and the air takes over further out. A few dB of air absorption can double the number of microphones a site needs.
 type: post
 project: acoustic-localization
+series: drone-hearing
+series_order: 2
 tags: [statistical-signal-processing, acoustics]
 links: [{"label":"Interactive: hearing range","url":"/interactive/hearing-range/"}]
 published: true

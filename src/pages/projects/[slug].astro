@@ -1,5 +1,6 @@
 ---
 import { fileContent } from "../../content.generated";
+import { orderDiary } from "../../diary-order";
 import BlogPostLayout from "../../layouts/BlogPostLayout.astro";
 import ContentBlocks from "../../components/ContentBlocks.astro";
 
@@ -8,9 +9,9 @@ export function getStaticPaths() {
 }
 
 const { project } = Astro.props;
-const entries = fileContent.entries
-  .filter((entry) => entry.published && entry.project_id === project.id)
-  .sort((a, b) => (b.published_at ?? "").localeCompare(a.published_at ?? ""));
+const entries = orderDiary(
+  fileContent.entries.filter((entry) => entry.published && entry.project_id === project.id),
+);
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 ---
 

@@ -1,8 +1,9 @@
 ---
 import { fileContent } from "../../content.generated";
+import { orderDiary } from "../../diary-order";
 import BlogPostLayout from "../../layouts/BlogPostLayout.astro";
 
-const entries = fileContent.entries.filter((entry) => entry.published).sort((a, b) => (b.published_at ?? "").localeCompare(a.published_at ?? ""));
+const entries = orderDiary(fileContent.entries.filter((entry) => entry.published));
 ---
 
 <BlogPostLayout frontmatter={{ title: "Diary", description: "Running notes, project updates, useful shares, and things learned along the way." }}>

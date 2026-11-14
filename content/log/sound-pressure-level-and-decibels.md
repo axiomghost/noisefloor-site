@@ -4,6 +4,8 @@ slug: sound-pressure-level-and-decibels
 summary: What a sound level in dB actually measures, why it uses 20 log and not 10 log, and the handful of numbers worth remembering. A primer for the posts that follow.
 type: post
 project: acoustic-localization
+series: drone-hearing
+series_order: 1
 tags: [statistical-signal-processing, acoustics]
 published: true
 published_at: 2026-11-14T00:00:00.000Z
