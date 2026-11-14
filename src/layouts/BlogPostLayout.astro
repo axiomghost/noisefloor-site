@@ -258,6 +258,7 @@ const updated = formatDate(frontmatter.updatedDate);
         font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
         font-size: 0.94rem;
         line-height: 1.82;
+        overflow-wrap: break-word;
       }
 
       a {
@@ -271,6 +272,7 @@ const updated = formatDate(frontmatter.updatedDate);
         text-decoration: underline;
       }
 
+      article :global(h1),
       article :global(h2),
       article :global(h3) {
         font-family: "Space Grotesk", "Arial", sans-serif;
@@ -280,8 +282,26 @@ const updated = formatDate(frontmatter.updatedDate);
       }
 
       article :global(h2) {
+        margin: 2rem 0 0.85rem;
         border-bottom: 1px solid rgba(201, 169, 110, 0.15);
         padding-bottom: 0.4rem;
+      }
+
+      article :global(p),
+      article :global(ul),
+      article :global(ol) {
+        margin: 0 0 1.05rem;
+      }
+
+      article :global(a) {
+        text-decoration: underline;
+        text-decoration-color: var(--signal-dim);
+        text-underline-offset: 0.2em;
+      }
+
+      article :global(a:focus-visible) {
+        outline: 2px solid var(--signal);
+        outline-offset: 4px;
       }
 
       article :global(code) {
@@ -324,22 +344,43 @@ const updated = formatDate(frontmatter.updatedDate);
       }
 
       article :global(img) {
+        display: block;
+        box-sizing: border-box;
         max-width: 100%;
         height: auto;
+        border: 1px solid var(--border-strong);
+      }
+
+      article :global(.article-table) {
+        overflow-x: auto;
+        margin: 1.25rem 0;
+        border: 1px solid var(--border);
+        border-top-color: var(--signal-dim);
+        background: var(--code-bg);
       }
 
       article :global(table) {
-        display: block;
-        overflow-x: auto;
-        margin: 1.25rem 0;
+        width: 100%;
         border-collapse: collapse;
+        font-size: 0.88rem;
+        line-height: 1.5;
+        font-variant-numeric: tabular-nums;
       }
 
       article :global(th),
       article :global(td) {
-        border: 1px solid var(--border);
-        padding: 0.45rem 0.7rem;
+        border-bottom: 1px solid var(--border);
+        padding: 0.55rem 0.75rem;
         text-align: left;
+      }
+
+      article :global(th) {
+        background: rgba(0, 229, 255, 0.05);
+        color: #66ffee;
+      }
+
+      article :global(tbody tr:last-child td) {
+        border-bottom: 0;
       }
 
       article :global(strong) {
@@ -411,7 +452,7 @@ const updated = formatDate(frontmatter.updatedDate);
         }
 
         .two-col {
-          grid-template-columns: 1fr;
+          grid-template-columns: minmax(0, 1fr);
         }
 
         .sidebar {

@@ -20,9 +20,35 @@ function remarkSitePaths() {
   };
 }
 
+// Give wide tables a scrolling container without changing native table layout.
+function rehypeArticleTables() {
+  return (tree) => {
+    function visit(node) {
+      if (!node.children) return;
+      node.children = node.children.map((child) => {
+        if (child.tagName === "table") {
+          return {
+            type: "element",
+            tagName: "div",
+            properties: { className: ["article-table"] },
+            children: [child],
+          };
+        }
+        visit(child);
+        return child;
+      });
+    }
+    visit(tree);
+  };
+}
+
 export default defineConfig({
   site: "https://axiomghost.github.io",
   base,
   trailingSlash: "always",
-  markdown: { remarkPlugins: [remarkSitePaths] },
+  markdown: {
+    remarkPlugins: [remarkSitePaths],
+    rehypePlugins: [rehypeArticleTables],
+    syntaxHighlight: false,
+  },
 });
