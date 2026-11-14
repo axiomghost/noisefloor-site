@@ -1,5 +1,5 @@
 ---
-name: 3GPP RAN1 standardization ledger
+name: 3GPP RAN1
 slug: 3gpp-ran1-standardization-ledger
 summary: Software for organizing, tracing, and understanding 3GPP RAN1 standardization work.
 status: building

@@ -1,5 +1,5 @@
 ---
-name: Wireless infrastructure for sensor networks
+name: Wireless Concepts
 slug: wireless-infrastructure-sensor-networks
 summary: Exploring dependable wireless infrastructure for distributed sensing systems.
 status: building
