@@ -5,7 +5,7 @@ summary: Spreading sets the range up close and the air takes over further out. A
 type: post
 project: acoustic-localization
 tags: [statistical-signal-processing, acoustics]
-links: [{"label":"Interactive: hearing range","url":"https://umronotes.m-umar81.workers.dev/interactive/hearing-range/"}]
+links: [{"label":"Interactive: hearing range","url":"/interactive/hearing-range/"}]
 published: true
 published_at: 2026-11-14T00:00:00.000Z
 media: [{"path":"/media/hearing-range-dashboard.png","kind":"image","caption":"The interactive hearing-range page"}]
@@ -73,9 +73,9 @@ gaps in winter.
 
 ## Try it yourself
 
-[![The hearing-range page: level at the microphone against range, with and without air absorption](/media/hearing-range-dashboard.png)](https://umronotes.m-umar81.workers.dev/interactive/hearing-range/)
+[![The hearing-range page: level at the microphone against range, with and without air absorption](/media/hearing-range-dashboard.png)](/interactive/hearing-range/)
 
-[Open the interactive page](https://umronotes.m-umar81.workers.dev/interactive/hearing-range/).
+[Open the interactive page](/interactive/hearing-range/).
 It has sliders for frequency, drone level, the level the microphone needs, temperature and
 humidity. It starts with one question: guess the range at 4 kHz before you move anything.
 

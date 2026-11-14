@@ -190,7 +190,7 @@ const updated = formatDate(frontmatter.updatedDate);
 
       .two-col {
         display: grid;
-        grid-template-columns: 13rem 1fr;
+        grid-template-columns: 13rem minmax(0, 1fr);
         gap: 1.5rem;
         align-items: start;
       }
@@ -326,6 +326,20 @@ const updated = formatDate(frontmatter.updatedDate);
       article :global(img) {
         max-width: 100%;
         height: auto;
+      }
+
+      article :global(table) {
+        display: block;
+        overflow-x: auto;
+        margin: 1.25rem 0;
+        border-collapse: collapse;
+      }
+
+      article :global(th),
+      article :global(td) {
+        border: 1px solid var(--border);
+        padding: 0.45rem 0.7rem;
+        text-align: left;
       }
 
       article :global(strong) {
@@ -479,7 +493,7 @@ const updated = formatDate(frontmatter.updatedDate);
               </a>
             </li>
             <li>
-              <a href="https://github.com/axiomghost/noisefloor-site/issues/new?title=Feedback:+{frontmatter.title}" target="_blank" rel="noopener">
+                <a href={`https://github.com/axiomghost/noisefloor-site/issues/new?title=${encodeURIComponent(`Feedback: ${frontmatter.title}`)}`} target="_blank" rel="noopener">
                 <svg class="footer-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                   <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/>
                   <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/>

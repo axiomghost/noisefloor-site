@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Microphone Hearing Range</title>
+<meta name="description" content="Interactive: how far a microphone can hear a drone, from spherical spreading and air absorption (ISO 9613-1).">
+<!--
+  Self-contained: no external scripts, fonts or images. Physics: free-field transmission loss,
+  TL = 20 log10(r) + alpha(f) r, with alpha from ISO 9613-1 (pure-tone atmospheric absorption).
+  The alpha function is a port of twin.acoustic.air_absorption_db_per_m and matched it to three
+  decimals at (20 C, 70 %), (-5 C, 30 %), (30 C, 90 %) for 100 Hz - 8 kHz on 2026-11-14.
+-->
+<style>
+:root{
+  --bg:#f6f5f2; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#8a8984;
+  --grid:#e4e3df; --axis:#b9b8b2; --s1:#2a78d6; --s2:#eb6834; --need:#52514e;
+  --accent:#2a78d6; --box:#efeeea;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121211; --surface:#1a1a19; --ink:#f0efec; --ink2:#c3c2b7; --muted:#8f8e88;
+    --grid:#2c2c2a; --axis:#4a4a46; --s1:#3987e5; --s2:#d95926; --need:#c3c2b7;
+    --accent:#3987e5; --box:#232321;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121211; --surface:#1a1a19; --ink:#f0efec; --ink2:#c3c2b7; --muted:#8f8e88;
+  --grid:#2c2c2a; --axis:#4a4a46; --s1:#3987e5; --s2:#d95926; --need:#c3c2b7;
+  --accent:#3987e5; --box:#232321;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:980px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:1.7rem;line-height:1.2;margin:0 0 6px}
+h2{font-size:1.1rem;margin:28px 0 8px}
+p{margin:0 0 10px}
+.lede{color:var(--ink2);margin-bottom:18px}
+a{color:var(--accent)}
+.card{background:var(--surface);border:1px solid var(--grid);border-radius:10px;padding:16px}
+.predict{background:var(--box);border-radius:10px;padding:14px 16px;margin:0 0 18px}
+.predict b{display:block;margin-bottom:6px}
+.choices{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+button{font:inherit;padding:6px 14px;border-radius:8px;border:1px solid var(--axis);
+  background:var(--surface);color:var(--ink);cursor:pointer}
+button:hover{border-color:var(--accent)}
+button[aria-pressed="true"]{border-color:var(--accent);outline:2px solid var(--accent)}
+#reveal{color:var(--ink2);margin:0}
+#reveal:empty{display:none}
+.layout{display:grid;grid-template-columns:280px 1fr;gap:16px}
+@media (max-width:760px){.layout{grid-template-columns:1fr}}
+.ctl{margin-bottom:14px}
+.ctl label{display:flex;justify-content:space-between;font-size:.92rem;color:var(--ink2)}
+.ctl output{color:var(--ink);font-variant-numeric:tabular-nums;font-weight:600}
+.ctl input{width:100%;accent-color:var(--accent)}
+.tag{font-size:.75rem;line-height:1.35;color:var(--muted)}
+.ctl .tag{display:block;margin-top:2px}
+.presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.presets button{padding:3px 9px;font-size:.82rem}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+@media (max-width:760px){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tile{background:var(--surface);border:1px solid var(--grid);border-radius:10px;padding:10px 12px}
+.tile .k{font-size:.8rem;color:var(--ink2)}
+.tile .v{font-size:1.45rem;font-weight:650;font-variant-numeric:tabular-nums}
+.tile .u{font-size:.85rem;color:var(--ink2);font-weight:400}
+svg{display:block;width:100%;height:auto}
+svg text{fill:var(--ink2);font-size:12px;font-family:inherit}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.85rem;color:var(--ink2);margin:4px 0 6px}
+.sw{display:inline-block;width:22px;height:0;border-top:2px solid;vertical-align:middle;margin-right:6px}
+#tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--axis);
+  border-radius:8px;padding:6px 9px;font-size:.82rem;color:var(--ink);display:none;
+  box-shadow:0 2px 8px rgba(0,0,0,.12);white-space:nowrap;font-variant-numeric:tabular-nums}
+.chartwrap{position:relative}
+math{font-size:1.1em}
+.eq{overflow-x:auto;padding:6px 0}
+ul{padding-left:20px;margin:0 0 10px}
+li{margin-bottom:4px}
+table{border-collapse:collapse;font-size:.88rem;font-variant-numeric:tabular-nums;width:100%}
+th,td{text-align:right;padding:4px 8px;border-bottom:1px solid var(--grid)}
+th:first-child,td:first-child{text-align:left}
+details summary{cursor:pointer;color:var(--ink2);margin:8px 0}
+footer{margin-top:32px;font-size:.82rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+<h1>How far can a microphone hear a drone?</h1>
+<p class="lede">Two things take level out of the sound on its way to a microphone. Spreading thins it
+out over a growing sphere. The air turns some of it into heat. Move the sliders to see which one
+sets the range and what that does to the number of microphones a site needs.</p>
+
+<div class="predict" id="predict">
+  <b>Predict first</b>
+  <p id="q">With the default settings, spreading alone lets the microphone hear the drone out to
+  <span id="qrs">1,000</span>&nbsp;m. Now move the analysis band from 1&nbsp;kHz to 4&nbsp;kHz, where
+  the air absorbs about five times more. What range do you expect?</p>
+  <div class="choices" id="choices"></div>
+  <p id="reveal" aria-live="polite"></p>
+</div>
+
+<div class="layout">
+  <div class="card" id="controls">
+    <div class="ctl">
+      <label for="f">Frequency band <output id="fo"></output></label>
+      <input id="f" type="range" min="0" max="1000" step="1">
+      <div class="presets"><button data-f="250">250 Hz</button><button data-f="1000">1 kHz</button><button data-f="4000">4 kHz</button></div>
+    </div>
+    <div class="ctl">
+      <label for="L1">Drone level at 1 m <output id="L1o"></output></label>
+      <input id="L1" type="range" min="60" max="100" step="1">
+      <span class="tag">[assumed] default 80 dB SPL, all of it in one band</span>
+    </div>
+    <div class="ctl">
+      <label for="Ln">Level the node needs <output id="Lno"></output></label>
+      <input id="Ln" type="range" min="0" max="45" step="1">
+      <span class="tag">[illustrative] set by the background noise at the site</span>
+    </div>
+    <div class="ctl">
+      <label for="T">Air temperature <output id="To"></output></label>
+      <input id="T" type="range" min="-10" max="35" step="1">
+    </div>
+    <div class="ctl">
+      <label for="H">Relative humidity <output id="Ho"></output></label>
+      <input id="H" type="range" min="10" max="100" step="1">
+      <div class="presets"><button data-wx="20,70">Mild, 20 °C 70%</button><button data-wx="-5,30">Cold and dry</button></div>
+    </div>
+    <button id="reset">Reset</button>
+  </div>
+
+  <div>
+    <div class="tiles">
+      <div class="tile"><div class="k">Hearing range, with air</div><div class="v" id="t_r"></div></div>
+      <div class="tile"><div class="k">Spreading alone</div><div class="v" id="t_rs"></div></div>
+      <div class="tile"><div class="k">Air absorption</div><div class="v" id="t_a"></div></div>
+      <div class="tile"><div class="k">Nodes needed vs spreading alone</div><div class="v" id="t_n"></div></div>
+    </div>
+
+    <div class="card">
+      <b>Level at the microphone against range</b>
+      <div class="legend">
+        <span><span class="sw" style="border-color:var(--s1)"></span>with air absorption</span>
+        <span><span class="sw" style="border-color:var(--s2);border-top-style:dashed"></span>spreading alone</span>
+        <span><span class="sw" style="border-color:var(--need);border-top-style:dotted"></span>level the node needs</span>
+      </div>
+      <div class="chartwrap"><svg id="c1" viewBox="0 0 640 330" role="img" aria-label="Level at the microphone against range"></svg><div id="tip"></div></div>
+      <p class="tag" id="c1note"></p>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <b>Air absorption against frequency</b> <span class="tag">at the temperature and humidity set on the left</span>
+      <svg id="c2" viewBox="0 0 640 230" role="img" aria-label="Air absorption against frequency"></svg>
+    </div>
+  </div>
+</div>
+
+<h2>The sum behind it</h2>
+<div class="card">
+<p>The level reaching the microphone is the level 1&nbsp;m from the drone, minus the transmission loss:</p>
+<div class="eq"><math display="block"><mrow>
+  <mi>L</mi><mo>(</mo><mi>r</mi><mo>)</mo><mo>=</mo><msub><mi>L</mi><mn>1</mn></msub><mo>&#x2212;</mo>
+  <munder><munder accentunder="true"><mrow><mn>20</mn><msub><mi>log</mi><mn>10</mn></msub><mi>r</mi></mrow><mo>&#x23DF;</mo></munder><mtext>spreading</mtext></munder>
+  <mo>&#x2212;</mo>
+  <munder><munder accentunder="true"><mrow><mi>&#x3B1;</mi><mo>(</mo><mi>f</mi><mo>)</mo><mspace width="0.1em"/><mi>r</mi></mrow><mo>&#x23DF;</mo></munder><mtext>air</mtext></munder>
+</mrow></math></div>
+<p>with <math><mi>r</mi></math> in metres. Spreading loses no energy; it only spreads the same power over
+a sphere of area <math><mn>4</mn><mi>&#x3C0;</mi><msup><mi>r</mi><mn>2</mn></msup></math>, so the level falls
+6&nbsp;dB each time the range doubles. Absorption grows in proportion to range, so far enough out it
+always wins. The two fall at the same rate at the crossover range</p>
+<div class="eq"><math display="block"><mrow><msub><mi>r</mi><mo>&#xD7;</mo></msub><mo>=</mo>
+  <mfrac><mn>8.7</mn><mi>&#x3B1;</mi></mfrac></mrow></math></div>
+<p>with <math><mi>&#x3B1;</mi></math> in dB per metre. Inside it, the range follows the spreading law. Beyond
+it, every extra metre costs more than the last. The microphone hears the drone out to the range
+where <math><mi>L</mi><mo>(</mo><mi>r</mi><mo>)</mo></math> falls to the level the node needs.</p>
+<p>Each microphone covers an area that grows as <math><msup><mi>r</mi><mn>2</mn></msup></math>, so the number
+needed for a site goes as</p>
+<div class="eq"><math display="block"><mrow><mi>N</mi><mo>&#x221D;</mo><mfrac><mn>1</mn><msup><mi>r</mi><mn>2</mn></msup></mfrac></mrow></math></div>
+<p>A range that is 30% shorter needs about twice as many microphones. That is why a few dB of air
+absorption matter.</p>
+</div>
+
+<h2>What this leaves out</h2>
+<div class="card">
+<ul>
+  <li><b>Open air only.</b> No ground reflection, buildings, wind or temperature gradients. Each can
+  add or remove several dB at a few hundred metres.</li>
+  <li><b>One band at a time.</b> A real drone spreads its sound over many bands. The range is set by
+  whichever band reaches furthest above the noise there.</li>
+  <li><b>The level the node needs is just a number here.</b> In practice the background noise at
+  the site sets it, and so does how long the node listens. That is the next piece.</li>
+  <li><b>Pure-tone absorption.</b> ISO 9613-1 gives absorption for a single tone. For a wide band
+  it is an approximation.</li>
+</ul>
+</div>
+
+<details>
+  <summary>Table view of the current curve</summary>
+  <div class="card"><table id="tbl"></table></div>
+</details>
+
+<footer>
+  Air absorption: ISO 9613-1:1993, the pure-tone formula at one standard atmosphere, computed
+  in your browser. The drone level and the node's needed level are inputs, not measurements.
+  This page is a teaching model and makes no claim about any particular drone or site.
+  <span id="back"></span>
+</footer>
+</main>
+
+<script>
+(function(){
+"use strict";
+var DEF={f:1000,L1:80,Ln:20,T:20,H:70};
+var st=Object.assign({},DEF);
+var $=function(id){return document.getElementById(id);};
+
+/* ISO 9613-1 pure-tone absorption, dB per metre, at 101.325 kPa */
+function alpha(f,Tc,RH){
+  var T=Tc+273.15,T0=293.15,T01=273.16;
+  var psat=Math.pow(10,-6.8346*Math.pow(T01/T,1.261)+4.6151);
+  var h=RH*psat;
+  var frO=24+4.04e4*h*(0.02+h)/(0.391+h);
+  var frN=Math.pow(T/T0,-0.5)*(9+280*h*Math.exp(-4.170*(Math.pow(T/T0,-1/3)-1)));
+  return 8.686*f*f*(1.84e-11*Math.sqrt(T/T0)+Math.pow(T/T0,-2.5)*(
+    0.01275*Math.exp(-2239.1/T)/(frO+f*f/frO)+0.1068*Math.exp(-3352/T)/(frN+f*f/frN)));
+}
+function level(r,L1,a){return L1-20*Math.log10(r)-a*r;}
+/* range where level falls to Ln; level is strictly decreasing in r */
+function rangeAir(L1,Ln,a){
+  if(L1<=Ln) return 1;
+  var lo=1,hi=1e6;
+  for(var i=0;i<80;i++){var m=Math.sqrt(lo*hi); if(level(m,L1,a)>Ln) lo=m; else hi=m;}
+  return Math.sqrt(lo*hi);
+}
+function rangeSpread(L1,Ln){return Math.max(1,Math.pow(10,(L1-Ln)/20));}
+
+/* formatting */
+function fmtR(r){return r>=10000?(r/1000).toFixed(0)+" km":r>=1000?(r/1000).toFixed(2)+" km":Math.round(r).toLocaleString("en")+" m";}
+function fmtF(f){return f>=1000?(f/1000).toFixed(f>=10000?0:2).replace(/\.?0+$/,"")+" kHz":Math.round(f)+" Hz";}
+function fmtA(a){var k=a*1000;return k<1?k.toFixed(2):k<10?k.toFixed(1):k.toFixed(0);}
+
+/* log slider for frequency: 50 Hz .. 10 kHz */
+var FMIN=50,FMAX=10000;
+function sToF(s){return FMIN*Math.pow(FMAX/FMIN,s/1000);}
+function fToS(f){return Math.round(1000*Math.log(f/FMIN)/Math.log(FMAX/FMIN));}
+
+/* SVG helpers */
+var NS="http://www.w3.org/2000/svg";
+function el(tag,attrs,parent){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+
+/* chart 1: level vs range */
+var C1={w:640,h:330,l:48,r:14,t:12,b:40,rmin:10,rmax:20000,ymin:-10,ymax:80};
+function x1(r){return C1.l+(C1.w-C1.l-C1.r)*Math.log10(r/C1.rmin)/Math.log10(C1.rmax/C1.rmin);}
+function y1(L){return C1.t+(C1.h-C1.t-C1.b)*(C1.ymax-L)/(C1.ymax-C1.ymin);}
+function clampY(L){return Math.max(C1.ymin-40,Math.min(C1.ymax+40,L));}
+
+function drawC1(a,rA,rS,rx){
+  var s=$("c1"); s.innerHTML="";
+  C1.ymax=Math.max(60,Math.ceil((st.L1-10)/10)*10);
+  var g=el("g",{},s);
+  [10,20,50,100,200,500,1000,2000,5000,10000,20000].forEach(function(r){
+    var major=[10,100,1000,10000].indexOf(r)>=0;
+    el("line",{x1:x1(r),x2:x1(r),y1:C1.t,y2:C1.h-C1.b,stroke:css("--grid"),"stroke-width":1},g);
+    var t=el("text",{x:x1(r),y:C1.h-C1.b+16,"text-anchor":r===C1.rmax?"end":"middle"},g);
+    t.textContent=r>=1000?(r/1000)+" km":r+" m"; if(!major)t.setAttribute("opacity",".7");
+  });
+  for(var L=Math.ceil(C1.ymin/10)*10;L<=C1.ymax;L+=10){
+    el("line",{x1:C1.l,x2:C1.w-C1.r,y1:y1(L),y2:y1(L),stroke:css("--grid"),"stroke-width":1},g);
+    var t=el("text",{x:C1.l-6,y:y1(L)+4,"text-anchor":"end"},g); t.textContent=L;
+  }
+  var yl=el("text",{x:12,y:C1.t+(C1.h-C1.t-C1.b)/2,"text-anchor":"middle",transform:"rotate(-90 12 "+(C1.t+(C1.h-C1.t-C1.b)/2)+")"},g); yl.textContent="dB SPL";
+  var xl=el("text",{x:(C1.l+C1.w-C1.r)/2,y:C1.h-6,"text-anchor":"middle"},g); xl.textContent="range from the drone (log scale)";
+  el("line",{x1:C1.l,x2:C1.w-C1.r,y1:C1.h-C1.b,y2:C1.h-C1.b,stroke:css("--axis"),"stroke-width":1},g);
+
+  var clip=el("clipPath",{id:"cp"},s); el("rect",{x:C1.l,y:C1.t,width:C1.w-C1.l-C1.r,height:C1.h-C1.t-C1.b},clip);
+  var plot=el("g",{"clip-path":"url(#cp)"},s);
+  /* crossover band */
+  if(rx>C1.rmin&&rx<C1.rmax){
+    el("line",{x1:x1(rx),x2:x1(rx),y1:C1.t,y2:C1.h-C1.b,stroke:css("--axis"),"stroke-width":1,"stroke-dasharray":"2 4"},plot);
+    var tx=el("text",{x:x1(rx)+5,y:C1.t+14},plot); tx.textContent="crossover "+fmtR(rx);
+  }
+  /* needed level */
+  el("line",{x1:C1.l,x2:C1.w-C1.r,y1:y1(st.Ln),y2:y1(st.Ln),stroke:css("--need"),"stroke-width":1.5,"stroke-dasharray":"1 4","stroke-linecap":"round"},plot);
+  var pS="",pA="";
+  for(var i=0;i<=240;i++){
+    var r=C1.rmin*Math.pow(C1.rmax/C1.rmin,i/240);
+    pS+=(i?"L":"M")+x1(r).toFixed(1)+" "+y1(clampY(level(r,st.L1,0))).toFixed(1);
+    pA+=(i?"L":"M")+x1(r).toFixed(1)+" "+y1(clampY(level(r,st.L1,a))).toFixed(1);
+  }
+  el("path",{d:pS,fill:"none",stroke:css("--s2"),"stroke-width":2,"stroke-dasharray":"6 4"},plot);
+  el("path",{d:pA,fill:"none",stroke:css("--s1"),"stroke-width":2},plot);
+  /* markers at the hearing ranges */
+  [[rS,"--s2"],[rA,"--s1"]].forEach(function(m){
+    if(m[0]>C1.rmin&&m[0]<C1.rmax){
+      el("line",{x1:x1(m[0]),x2:x1(m[0]),y1:y1(st.Ln),y2:C1.h-C1.b,stroke:css(m[1]),"stroke-width":1,opacity:.6},plot);
+      el("circle",{cx:x1(m[0]),cy:y1(st.Ln),r:5,fill:css(m[1]),stroke:css("--surface"),"stroke-width":2},plot);
+    }
+  });
+  var lab=el("text",{x:Math.max(x1(rA),C1.l+120)-10,y:y1(st.Ln)+20,"text-anchor":"end"},plot);
+  lab.style.fill=css("--ink"); lab.textContent="hears to "+fmtR(rA);
+
+  /* hover layer */
+  var hl=el("line",{y1:C1.t,y2:C1.h-C1.b,stroke:css("--axis"),"stroke-width":1,visibility:"hidden"},s);
+  var hit=el("rect",{x:C1.l,y:C1.t,width:C1.w-C1.l-C1.r,height:C1.h-C1.t-C1.b,fill:"transparent"},s);
+  var tip=$("tip");
+  function move(ev){
+    var b=s.getBoundingClientRect(), sx=(ev.clientX-b.left)*C1.w/b.width;
+    if(sx<C1.l||sx>C1.w-C1.r){out();return;}
+    var r=C1.rmin*Math.pow(C1.rmax/C1.rmin,(sx-C1.l)/(C1.w-C1.l-C1.r));
+    hl.setAttribute("x1",sx);hl.setAttribute("x2",sx);hl.setAttribute("visibility","visible");
+    var LA=level(r,st.L1,a),LS=level(r,st.L1,0);
+    tip.innerHTML="<b>"+fmtR(r)+"</b><br>with air: "+LA.toFixed(1)+" dB<br>spreading alone: "+LS.toFixed(1)+" dB<br>air takes: "+(a*r).toFixed(1)+" dB";
+    tip.style.display="block";
+    var px=ev.clientX-b.left, w=tip.offsetWidth;
+    tip.style.left=(px+14+w>b.width?px-14-w:px+14)+"px"; tip.style.top=(ev.clientY-b.top-10)+"px";
+  }
+  function out(){hl.setAttribute("visibility","hidden");tip.style.display="none";}
+  hit.addEventListener("pointermove",move); hit.addEventListener("pointerleave",out);
+}
+
+/* chart 2: alpha vs frequency */
+var C2={w:640,h:230,l:48,r:14,t:12,b:40,amin:0.05,amax:300};
+function x2(f){return C2.l+(C2.w-C2.l-C2.r)*Math.log10(f/FMIN)/Math.log10(FMAX/FMIN);}
+function y2(ak){return C2.t+(C2.h-C2.t-C2.b)*Math.log10(C2.amax/ak)/Math.log10(C2.amax/C2.amin);}
+function drawC2(){
+  var s=$("c2"); s.innerHTML="";
+  [50,100,200,500,1000,2000,5000,10000].forEach(function(f){
+    el("line",{x1:x2(f),x2:x2(f),y1:C2.t,y2:C2.h-C2.b,stroke:css("--grid")},s);
+    var t=el("text",{x:x2(f),y:C2.h-C2.b+16,"text-anchor":f===FMAX?"end":"middle"},s); t.textContent=fmtF(f);
+  });
+  [0.1,1,10,100].forEach(function(ak){
+    el("line",{x1:C2.l,x2:C2.w-C2.r,y1:y2(ak),y2:y2(ak),stroke:css("--grid")},s);
+    var t=el("text",{x:C2.l-6,y:y2(ak)+4,"text-anchor":"end"},s); t.textContent=ak;
+  });
+  el("line",{x1:C2.l,x2:C2.w-C2.r,y1:C2.h-C2.b,y2:C2.h-C2.b,stroke:css("--axis")},s);
+  var yl=el("text",{x:12,y:(C2.t+C2.h-C2.b)/2,"text-anchor":"middle",transform:"rotate(-90 12 "+((C2.t+C2.h-C2.b)/2)+")"},s); yl.textContent="dB/km";
+  var xl=el("text",{x:(C2.l+C2.w-C2.r)/2,y:C2.h-6,"text-anchor":"middle"},s); xl.textContent="frequency (log scale)";
+  var p="";
+  for(var i=0;i<=200;i++){var f=FMIN*Math.pow(FMAX/FMIN,i/200),ak=Math.max(C2.amin,Math.min(C2.amax,1000*alpha(f,st.T,st.H)));
+    p+=(i?"L":"M")+x2(f).toFixed(1)+" "+y2(ak).toFixed(1);}
+  el("path",{d:p,fill:"none",stroke:css("--s1"),"stroke-width":2},s);
+  var ak=1000*alpha(st.f,st.T,st.H);
+  el("circle",{cx:x2(st.f),cy:y2(Math.max(C2.amin,Math.min(C2.amax,ak))),r:5,fill:css("--s1"),stroke:css("--surface"),"stroke-width":2},s);
+  var t=el("text",{x:Math.min(x2(st.f)+9,C2.w-120),y:y2(Math.max(C2.amin,Math.min(C2.amax,ak)))-9},s);
+  t.style.fill=css("--ink"); t.textContent=fmtF(st.f)+": "+fmtA(alpha(st.f,st.T,st.H))+" dB/km";
+}
+
+function table(a){
+  var rows="<tr><th>Range</th><th>Spreading (dB)</th><th>Air (dB)</th><th>Level, with air (dB SPL)</th></tr>";
+  [50,100,200,300,500,1000,2000,5000].forEach(function(r){
+    rows+="<tr><td>"+fmtR(r)+"</td><td>"+(20*Math.log10(r)).toFixed(1)+"</td><td>"+(a*r).toFixed(1)+"</td><td>"+level(r,st.L1,a).toFixed(1)+"</td></tr>";
+  });
+  $("tbl").innerHTML=rows;
+}
+
+function render(){
+  var a=alpha(st.f,st.T,st.H), rA=rangeAir(st.L1,st.Ln,a), rS=rangeSpread(st.L1,st.Ln), rx=8.686/a;
+  $("fo").textContent=fmtF(st.f); $("L1o").textContent=st.L1+" dB"; $("Lno").textContent=st.Ln+" dB";
+  $("To").textContent=st.T+" °C"; $("Ho").textContent=st.H+"%";
+  $("t_r").textContent=fmtR(rA); $("t_rs").textContent=fmtR(rS);
+  $("t_a").innerHTML=fmtA(a)+' <span class="u">dB/km</span>';
+  var n=Math.pow(rS/rA,2); $("t_n").innerHTML="&times;"+(n<10?n.toFixed(1):n.toFixed(0));
+  $("c1note").textContent="At "+fmtF(st.f)+" the air takes "+(a*rA).toFixed(1)+" dB by the hearing range, against "+(20*Math.log10(rA)).toFixed(1)+" dB to spreading. Crossover range: "+fmtR(rx)+".";
+  drawC1(a,rA,rS,rx); drawC2(); table(a);
+}
+function sync(){$("f").value=fToS(st.f);["L1","Ln","T","H"].forEach(function(k){$(k).value=st[k];});render();}
+
+$("f").addEventListener("input",function(e){var f=sToF(+e.target.value);st.f=f<1000?Math.round(f/10)*10:Math.round(f/50)*50;render();});
+["L1","Ln","T","H"].forEach(function(k){$(k).addEventListener("input",function(e){st[k]=+e.target.value;render();});});
+document.querySelectorAll("[data-f]").forEach(function(b){b.addEventListener("click",function(){st.f=+b.dataset.f;sync();});});
+document.querySelectorAll("[data-wx]").forEach(function(b){b.addEventListener("click",function(){var v=b.dataset.wx.split(",");st.T=+v[0];st.H=+v[1];sync();});});
+$("reset").addEventListener("click",function(){st=Object.assign({},DEF);sync();});
+
+/* predict-first: choices are fixed; the answer is computed, never typed */
+(function(){
+  var rS=rangeSpread(DEF.L1,DEF.Ln), r4=rangeAir(DEF.L1,DEF.Ln,alpha(4000,DEF.T,DEF.H));
+  $("qrs").textContent=Math.round(rS).toLocaleString("en");
+  var opts=[900,600,400,200], box=$("choices");
+  opts.forEach(function(o){
+    var b=document.createElement("button"); b.textContent="about "+o+" m"; b.setAttribute("aria-pressed","false");
+    b.addEventListener("click",function(){
+      box.querySelectorAll("button").forEach(function(x){x.setAttribute("aria-pressed","false");});
+      b.setAttribute("aria-pressed","true");
+      var n=Math.pow(rS/r4,2);
+      $("reveal").innerHTML="It is <b>"+fmtR(r4)+"</b>. The air takes "+(alpha(4000,DEF.T,DEF.H)*r4).toFixed(0)+
+        " dB over that distance, so covering the same area takes about "+n.toFixed(0)+" times as many microphones as spreading alone predicts. "+
+        "Click the 4 kHz button to see it on the chart.";
+    });
+    box.appendChild(b);
+  });
+})();
+
+if(location.protocol!=="file:"){$("back").innerHTML=' <a href="/log/how-far-can-a-microphone-hear-a-drone">Read the article</a>.';}
+if(window.matchMedia){var mq=window.matchMedia("(prefers-color-scheme: dark)");if(mq.addEventListener)mq.addEventListener("change",render);}
+sync();
+})();
+</script>
+</body>
+</html>

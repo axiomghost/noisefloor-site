@@ -8,9 +8,26 @@ export function getStaticPaths() {
 }
 
 const { project } = Astro.props;
+const entries = fileContent.entries
+  .filter((entry) => entry.published && entry.project_id === project.id)
+  .sort((a, b) => (b.published_at ?? "").localeCompare(a.published_at ?? ""));
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 ---
 
 <BlogPostLayout frontmatter={{ title: project.name, description: project.summary, tags: project.tags }}>
   <p class="post-meta">&gt; project // {project.status}</p>
-  <ContentBlocks source={project.body} />
+  <ContentBlocks kind="projects" slug={project.slug} />
+  {entries.length > 0 && (
+    <section aria-labelledby="project-diary">
+      <h2 id="project-diary">Project diary</h2>
+      <ul>
+        {entries.map((entry) => (
+          <li>
+            <a href={`${base}/log/${entry.slug}/`}>{entry.title}</a>
+            {entry.summary && <p>{entry.summary}</p>}
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
 </BlogPostLayout>
