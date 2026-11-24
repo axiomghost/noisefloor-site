@@ -81,9 +81,24 @@ th,td{text-align:right;padding:4px 8px;border-bottom:1px solid var(--grid)}
 th:first-child,td:first-child{text-align:left}
 details summary{cursor:pointer;color:var(--ink2);margin:8px 0}
 footer{margin-top:32px;font-size:.82rem;color:var(--muted)}
+.sitebar{border-bottom:1px solid var(--grid);background:var(--surface)}
+.sitebar div{max-width:980px;margin:0 auto;padding:0 16px;display:flex;flex-wrap:wrap;gap:4px 18px;align-items:center;min-height:48px;font-size:.92rem}
+.sitebar a{color:var(--ink2);text-decoration:none;padding:10px 0}
+.sitebar a:hover{color:var(--ink)}
+.sitebar .home{font-family:ui-monospace,Consolas,monospace;font-weight:600;color:var(--ink);margin-right:auto}
 </style>
+<script>
+/* Same remembered theme as the rest of noise-floor. */
+try{var t=localStorage.getItem("nf-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}
+</script>
 </head>
 <body>
+<nav class="sitebar" aria-label="Site"><div>
+<a class="home" href="../../">noise-floor</a>
+<a href="../../log/how-far-can-a-microphone-hear-a-drone/">The article</a>
+<a href="../../log/">Diary</a>
+<a href="../../projects/">Projects</a>
+</div></nav>
 <main>
 <h1>How far can a microphone hear a drone?</h1>
 <p class="lede">Two things take level out of the sound on its way to a microphone. Spreading thins it

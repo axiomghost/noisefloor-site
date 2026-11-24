@@ -1,0 +1,20 @@
+---
+// One diary entry as a card: date, reading time, series, title, summary.
+import { href, formatDate, readingMinutes, seriesOf } from "../site";
+
+const { entry, heading = "h3" } = Astro.props;
+const series = seriesOf(entry);
+const date = formatDate(entry.published_at);
+const Heading = heading;
+---
+
+<li class="card">
+  <p class="card-meta">
+    {[date, entry.body ? `${readingMinutes(entry.body)} min read` : ""].filter(Boolean).join(" · ")}
+  </p>
+  <Heading><a href={href(`/log/${entry.slug}/`)}>{entry.title}</a></Heading>
+  {series && series.parts.length > 1 && (
+    <p class="card-meta card-series">{series.name} · part {series.index + 1} of {series.parts.length}</p>
+  )}
+  {entry.summary && <p>{entry.summary}</p>}
+</li>

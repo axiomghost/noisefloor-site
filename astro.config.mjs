@@ -82,8 +82,9 @@ export default defineConfig({
     // $...$ and $$...$$ become KaTeX HTML at build time; BlogPostLayout imports its stylesheet.
     remarkPlugins: [remarkSitePaths, remarkMath],
     rehypePlugins: [rehypeKatex, rehypeMathPunctuation, rehypeArticleTables],
-    // Shiki colours code fences at build time. The site is dark only, so one dark theme.
+    // Shiki colours code fences at build time, writing both themes as CSS variables;
+    // src/styles/site.css picks the one that matches the page's light or dark theme.
     syntaxHighlight: "shiki",
-    shikiConfig: { theme: "poimandres" },
+    shikiConfig: { themes: { light: "github-light", dark: "poimandres" }, defaultColor: false },
   },
 });

@@ -1,0 +1,18 @@
+---
+// One project as a card: status, name, summary, number of diary entries.
+import { href, entries, humanize } from "../site";
+
+const { project, heading = "h3" } = Astro.props;
+const count = entries().filter((e) => e.project_id === project.id).length;
+const Heading = heading;
+---
+
+<li class="card">
+  <p class="card-meta">
+    {[humanize(project.status ?? "active"), count > 0 ? `${count} ${count === 1 ? "entry" : "entries"}` : ""]
+      .filter(Boolean)
+      .join(" · ")}
+  </p>
+  <Heading><a href={href(`/projects/${project.slug}/`)}>{project.name}</a></Heading>
+  <p>{project.summary}</p>
+</li>
