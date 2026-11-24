@@ -7,8 +7,9 @@ they belong to (for example `traffic_intersection/learn/posts/`). A published po
 
 ## Publishing a post
 
-Tell Claude Code: "publish <post>" (or "preview <post>" to see it first). The `publish-post`
-skill (`~/.claude/skills/publish-post/`) then runs the whole job:
+Tell an AI agent "publish <post>" (or "preview <post>" to see it first). The procedure is
+`PUBLISHING.md`. Codex and other agents find it through `AGENTS.md`, and Claude Code through
+its `publish-post` skill. The agent then runs the whole job:
 
 1. reads and screens the draft (privacy, sensitive content);
 2. checks and previews it, and fixes mechanical and rendering problems in the draft;

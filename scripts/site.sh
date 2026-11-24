@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# noise-floor publishing pipeline. Run it in WSL.
+# noise-floor publishing pipeline. Run it in WSL, Linux or macOS (needs bash, rsync, node, npm).
 #
-# The repository stays on the Windows side. Builds run in a Linux mirror
-# (default ~/nf-build) with its own node_modules, so nothing here depends on
-# Windows npm or the old Windows node_modules. GitHub Actions builds the live
-# site from package-lock.json, exactly as the mirror does.
+# Builds run in a mirror (default ~/nf-build, override with NF_MIRROR) with its
+# own node_modules, so a Windows checkout never needs Windows npm. GitHub
+# Actions builds the live site from package-lock.json, exactly as the mirror does.
+# The full publishing procedure, for any person or AI agent, is PUBLISHING.md.
 #
 #   site.sh sync              copy the repo into the mirror; npm ci when the lockfile changed
 #   site.sh check  <post.md>  lint a post (front matter, links, media, privacy patterns)
@@ -22,9 +22,11 @@ PORT="${NF_PORT:-4329}"
 
 die() { echo "site.sh: $*" >&2; exit 1; }
 
-to_wsl_path() {
+to_wsl_path() { # Windows paths are converted under WSL; on plain Linux or macOS paths pass through.
   case "$1" in
-    [A-Za-z]:[\\/]*) wslpath -u "$1" ;;
+    [A-Za-z]:[\\/]*)
+      command -v wslpath >/dev/null || die "a Windows path needs WSL: $1"
+      wslpath -u "$1" ;;
     *) printf '%s\n' "$1" ;;
   esac
 }
