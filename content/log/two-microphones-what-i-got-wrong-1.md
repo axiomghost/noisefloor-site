@@ -1,7 +1,7 @@
 ---
-title: "Two microphones and a delay: what I got wrong (part 1)"
+title: "Two microphones and a delay: questions and corrections (part 1)"
 slug: two-microphones-what-i-got-wrong-1
-summary: I am learning how two microphones find the direction of a sound. These are my mistakes so far, each with the fix, so I can revise from one page.
+summary: How two microphones find the direction of a sound, as ten questions, the answers given, and the corrections. Units, trigonometry, clocks, phase, and the first numpy function.
 type: post
 project: acoustic-localization
 series: learning-in-the-open
@@ -13,18 +13,13 @@ published_at: 2026-11-24T00:00:00.000Z
 media: []
 ---
 
-I am building a small rig: two microphones in a laptop, a clap somewhere on the desk, and code
-that tells me which direction the clap came from. I want to understand every number in it, so I
-answer questions on paper first, cold, before reading anything. Claude, the AI I work with,
-grades my answers and writes the corrections.
+Two microphones in a laptop, a clap somewhere on the desk, and code that reports which direction
+the clap came from. Each entry below gives a question on that subject, the main point of the answer
+given, and the correction.
 
-This page is the list of what I got wrong, and the fix for each. I am putting it in public for
-two reasons. It keeps me honest. And it gives me one place to revise from, on my phone, when I
-am travelling.
-
-The setup, so the numbers make sense: two microphones $d = 3.34$ cm apart, each recorded at
-48,000 samples per second, sound at $c = 343$ m/s. The rig measures the delay $\tau$ between the
-two microphones and turns it into an angle $\theta$, measured from straight ahead:
+The setup: two microphones $d = 3.34$ cm apart, each recorded at 48,000 samples per second, sound
+at $c = 343$ m/s. The rig measures the delay $\tau$ between the two microphones and turns it into
+an angle $\theta$, measured from straight ahead:
 
 $$
 \theta = \arcsin\!\left(\frac{c\,\tau}{d}\right)
@@ -32,38 +27,42 @@ $$
 
 ## 1. The speed of sound
 
-**What I wrote:** 353 m/s.
+**Question:** Roughly how fast does sound travel in room air?
 
-**What's right:** 343 m/s at room temperature, 20 °C. 353 m/s is the speed at about 37 °C.
+**Answer:** 353 m/s. Wrong.
 
-**Remember:** sound moves about a third of a metre per millisecond, and 0.343 mm per
-microsecond. I passed this on a re-test four days later.
+**Correction:** 343 m/s at 20 °C. 353 m/s is the speed at about 37 °C. Sound moves about a third
+of a metre per millisecond, and 0.343 mm per microsecond.
 
 ## 2. One sample period
 
-**What I wrote:** $1/48000 = 2.08\times10^{-5}$ s, "about 0.2 µs". I was sure of it.
+**Question:** At 48,000 samples per second, how much time passes between two samples, and how far
+does sound travel in that time?
 
-**What's right:** $2.08\times10^{-5}\ \mathrm{s} = 20.8\times10^{-6}\ \mathrm{s} = 20.8\ \mu\mathrm{s}$.
-I was off by a factor of 100. In that time sound moves 7.15 mm, not 0.07 mm.
+**Answer:** $1/48000 = 2.08\times10^{-5}$ s, read as about 0.2 µs. Wrong by a factor of 100.
+
+**Correction:** $2.08\times10^{-5}\ \mathrm{s} = 20.8\times10^{-6}\ \mathrm{s} = 20.8\ \mu\mathrm{s}$.
+In that time sound moves 7.15 mm, not 0.07 mm.
 
 **The check that catches it:** 48 kHz is about 50 kHz, so one period is about
 $1/50000\ \mathrm{s} = 20\ \mu\mathrm{s}$. A period of 0.2 µs would mean sampling at 5 MHz.
 
-**Why it matters here:** the biggest delay this rig can ever see is 97 µs, under 5 samples.
-With my wrong number it would have looked like 500 samples.
+**Why it matters here:** the biggest delay this rig can ever see is 97 µs, under 5 samples. With
+the wrong period it would look like 500 samples.
 
-On the re-test I got the conversions right (44.1 kHz gives 22.68 µs) but made a new slip. The
-question asked for a delay of 3.5 samples, and I boxed the length of one sample. The answer was
-$3.5 \times 20.83 = 72.9$ µs. A quick estimate, $3.5 \times 20 \approx 70$, would have caught
-it. Lesson: reread the question's last line before boxing the answer.
+**A related slip:** asked for a delay of 3.5 samples at 48 kHz, the answer gave the length of one
+sample. The delay is $3.5 \times 20.83 = 72.9$ µs. A quick estimate, $3.5 \times 20 \approx 70$,
+catches it. Read the question's last line again before boxing the answer.
 
 ## 3. The sine of 30 degrees
 
-**What I wrote:** $\sin 30^\circ = 2/\sqrt{5}$, from a right triangle with sides 1 and 2. And
-$\arcsin 0.5 = 45^\circ$. I was sure of the second one.
+**Question:** Give $\sin 30^\circ$ without a calculator. What is $\arcsin 0.5$ in degrees?
 
-**What's right:** $\sin 30^\circ = 0.5$, so $\arcsin 0.5 = 30^\circ$. My triangle with sides 1
-and 2 is real, but its angle is $\arctan(1/2) = 26.57^\circ$, not $30^\circ$. The triangle for
+**Answer:** $\sin 30^\circ = 2/\sqrt{5}$, from a right triangle with sides 1 and 2, and
+$\arcsin 0.5 = 45^\circ$. Both wrong.
+
+**Correction:** $\sin 30^\circ = 0.5$, so $\arcsin 0.5 = 30^\circ$. The triangle with sides 1 and
+2 is real, but its angle is $\arctan(1/2) = 26.57^\circ$, not $30^\circ$. The triangle for
 $30^\circ$ is half of an equilateral triangle with side 2: hypotenuse 2, opposite side 1.
 
 **Remember:** the sines of 0, 30, 45, 60 and 90 degrees follow one pattern:
@@ -83,46 +82,52 @@ $$
 \sin\theta = \frac{\tau}{\tau_{\max}}
 $$
 
-Half the biggest delay means $30^\circ$, not $45^\circ$. The whole rig is this one pair, angle
-and sine.
+Half the biggest delay means $30^\circ$, not $45^\circ$. The whole rig is this one pair, angle and
+sine.
 
 ## 4. What the rig solves for
 
-**What I wrote:** the last step of the chain was "inter-microphone distance estimation".
+**Question:** From the sound in the air to an angle on the screen, the rig runs three steps. Name
+them in order.
 
-**What's right:** the chain is record, correlate, then geometry: $\theta = \arcsin(c\tau/d)$.
-In normal use the spacing $d$ is known and the angle $\theta$ is what we solve for. Solving for
+**Answer:** the last step named as "inter-microphone distance estimation". Wrong.
+
+**Correction:** the chain is record, correlate, then geometry: $\theta = \arcsin(c\tau/d)$. In
+normal use the spacing $d$ is known and the angle $\theta$ is what the rig solves for. Solving for
 $d$ is a different job: calibration, done once with claps from known directions,
 $d = c\tau/\sin\theta$.
 
-**Remember:** one equation, two modes. Operating: $d$ known, solve $\theta$. Calibrating:
-$\theta$ known, solve $d$. From radio: with known pilots you estimate the channel, with a known
-channel you estimate the data.
+**Remember:** one equation, two modes. Operating: $d$ known, solve $\theta$. Calibrating: $\theta$
+known, solve $d$. From radio: with known pilots you estimate the channel, with a known channel you
+estimate the data.
 
 ## 5. Why both microphones need one clock
 
-**What I wrote:** "necessary for accurate delay". True, but with no reason.
+**Question:** Why must both microphones be sampled by one clock?
 
-**What's right:** the delay is the difference between two arrival times. With one clock, both
-channels share one timeline, and any start time cancels. With two separate recorders you get two
-extra errors that look exactly like a real delay, a start offset $s$ (one recorder started later)
+**Answer:** it is needed for an accurate delay. True, but no reason given.
+
+**Correction:** the delay is the difference between two arrival times. With one clock, both
+channels share one timeline, and any start time cancels. With two separate recorders, two extra
+errors appear that look exactly like a real delay: a start offset $s$ (one recorder started later)
 and a drift $\varepsilon$ (one clock ticks slightly faster):
 
 $$
 \tau_{\text{read}} = \tau_{\text{true}} + s + \varepsilon\, t
 $$
 
-**The size:** a 20 ppm rate difference drifts 20 µs every second. It passes the whole ±97 µs
-delay window in under 5 seconds. A constant offset can be measured once and subtracted; a drift
-cannot.
+**The size:** a 20 ppm rate difference drifts 20 µs every second, so a clap from straight ahead
+drifts out of the ±97 µs delay window in under 5 seconds. A constant offset can be measured once
+and subtracted; a drift cannot.
 
 ## 6. The biggest possible delay
 
-**What I wrote:** I did not know why it was about 0.1 ms. I said so.
+**Question:** Why is the largest delay this pair can see about 0.1 ms?
 
-**What's right:** the biggest delay happens when the clap is on the line through both
-microphones. The sound passes the near one and then travels the whole spacing $d$ to the far
-one. So
+**Answer:** none given.
+
+**Correction:** the biggest delay happens when the clap is on the line through both microphones.
+The sound passes the near one and then travels the whole spacing $d$ to the far one. So
 
 $$
 \begin{aligned}
@@ -134,16 +139,19 @@ $$
 **Why nothing can be bigger, even close up:** one side of a triangle is never longer than the
 other two together. So the difference between the two paths is never more than $d$.
 
-**A word I mixed up:** I called this the "range". But range means the distance to the source.
-The set of delays geometry allows, $-d/c \le \tau \le +d/c$, is the delay window. The scatter of
-repeated claps is the spread.
+**Words to keep apart:** range is the distance to the source. The set of delays geometry allows,
+$-d/c \le \tau \le +d/c$, is the delay window. The scatter of repeated claps is the spread. The
+answer called the delay window the "range".
 
 ## 7. The phase of a delayed tone
 
-**What I wrote:** $\sin(2\pi t/f)$, and a delay as $e^{-j\tau}$. I stopped there.
+**Question:** For a pure tone of frequency $f$, a delay $\tau$ shows up as a phase difference.
+Write the formula, and give its value for $f = 1$ kHz and $\tau = 50$ µs.
 
-**What's right:** a tone is $\sin(2\pi f t)$. Delay it by $\tau$ and multiply $f$ into the
-bracket:
+**Answer:** the tone written as $\sin(2\pi t/f)$ and the delay as $e^{-j\tau}$, with no value.
+Wrong.
+
+**Correction:** a tone is $\sin(2\pi f t)$. Delay it by $\tau$ and multiply $f$ into the bracket:
 
 $$
 \sin\big(2\pi f(t-\tau)\big) = \sin(2\pi f t - 2\pi f\tau)
@@ -162,66 +170,125 @@ $e^{-j\tau}$ is wrong. $f\tau$ has no unit, so $e^{-j2\pi f\tau}$ is fine.
 
 ## 8. Why the rig measures a delay and not a phase
 
-**What I had right:** each frequency in a clap gets its own phase, $2\pi f\tau$, so the rig
-measures the one delay they all share.
+**Question:** A base station's antenna pair finds the angle from the phase difference of the
+carrier. Why does a time difference suit a clap better?
 
-**What was missing:** why a radio antenna pair gets away with one phase. A radio signal is
-narrowband: 20 MHz wide around 2 GHz, about 1%. Across that band the phase barely moves, so one
+**Answer:** each frequency in a clap gets its own phase, $2\pi f\tau$, so the rig measures the one
+delay they all share. Right, but incomplete.
+
+**Correction:** the missing part is why the antenna pair gets away with one phase. A radio signal
+is narrowband: 20 MHz wide around 2 GHz, about 1%. Across that band the phase barely moves, so one
 phase describes the whole signal. A clap runs from about 300 Hz to 12 kHz. Across that band the
 phase sweeps more than a full turn. There is no one phase to quote, only the slope of phase
 against frequency, and that slope is the delay: $\varphi(f) = 2\pi\tau \cdot f$.
 
 **One number to remember:** bandwidth times the biggest delay, $B\,\tau_{\max}$. For the antenna
-pair it is 0.005. For my microphones it is 1.14. Much less than 1 means narrowband.
+pair it is 0.005. For these microphones it is 1.14. Much less than 1 means narrowband.
 
 ## 9. Rounding too early
 
-**What I did:** in $\arcsin(343 \times 50\ \mu\mathrm{s} / 4\ \mathrm{cm})$ I rounded 0.42875 to
-0.42 before the last step.
+**Question:** Take $c = 343$ m/s, $\tau = 50$ µs, $d = 4$ cm. Compute $\theta$.
 
-**What it cost:** $24.83^\circ$ instead of $25.39^\circ$, an error of $0.56^\circ$ from one
-rounding.
+**Answer:** the right method, but $c\tau/d = 0.42875$ rounded to 0.42 before the arcsine.
 
-**Remember:** keep three significant figures until the last step.
+**Correction:** that one rounding gives $24.83^\circ$ instead of $25.39^\circ$, an error of
+$0.56^\circ$. Keep three significant figures until the last step.
 
-## 10. In code: `&` is not "and"
+## 10. In code: a delay is a shift
 
-After the paper questions I asked for something more hands-on, so I am now writing the rig's
-core in Python myself, one small function at a time, with a checker. The first function shifts a
-signal by $k$ samples, with zeros coming in. I wrote it with a loop first, then saw it is just a
-slice and rewrote it. That took me longer than it should have.
+**Context:** the rig's core, as a small numpy toy, finds the delay between two channels by
+cross-correlation. It has four functions:
 
-My condition for "$k$ is inside the array" was:
+| Function | What it does |
+|---|---|
+| `delay_copy` | delay a signal by $k$ samples |
+| `xcorr_lags` | cross-correlate two channels, with the lag of each value |
+| `peak_lag` | find the peak, only inside the delay window $\pm d/c$ |
+| `lag_to_bearing` | turn the lag into an angle |
 
-```python
-if (k >= 0 & k < len(x)):
-```
+This part covers the first one.
 
-It passed three checks and crashed on $k = 7$ with a 5-sample array.
-
-**Why:** in Python, `&` is bitwise AND, not logical AND. It also binds before `>=` and `<`.
-So Python computes `0 & 7 = 0` first and reads the line as `7 >= 0 < 5`. Python chains that into
-`(7 >= 0) and (0 < 5)`, which is True. The branch ran and tried to copy 3 values into 0 places.
-
-**The fix:**
+**The idea:** a delay of $k$ samples is the same waveform, $k$ samples later. What was at index $n$
+is now at index $n + k$. The output keeps the input's length: zeros (silence before the sound
+arrives) are shifted in at the front, and samples pushed past the end are dropped. $k$ can be
+negative, which gives an earlier copy:
 
 ```python
-if 0 <= k < len(x):
+x = np.array([1., 2., 3., 4., 5.])
+delay_copy(x, 2)  # 0 0 1 2 3
+delay_copy(x, -1) # 2 3 4 5 0
 ```
 
-My logic was right. The operator was wrong. In C++, logical AND is `&&`. In Python it is `and`.
-The single `&` is bitwise in both.
+**Question:** write `delay_copy(x, k)`.
 
-## Habits I am fixing
+**Answer:** first a loop, then the same thing as numpy slices. The slice version, as first
+submitted:
 
-- Writing a quick estimate before the calculator. Most of my slips would have been caught by
-  one rough line.
-- Tagging every answer with how sure I am. My confident mistakes taught me the most.
-- Rereading the question's last line before boxing an answer.
+```python
+def delay_copy(x, k):
+    y = np.zeros_like(x)
+    if (k >= 0 & k < len(x)):
+        y[:k] = 0
+        y[k:] = x[:len(x)-k]
+    elif (k < 0):
+        y[:len(x)+k] = x[-k:len(x)]
+    elif (k == -0):
+        y = []
+    return y
+```
 
-## Still unclear
+The checks for $k = 2$, $-1$ and $0$ passed. $k = 7$, longer than the 5-sample array, crashed:
 
-Why GCC-PHAT, the method the rig uses to find the delay, gives such a sharp peak. I have parked
-it until I reach the chapter on frequencies, where I will write a small version myself.
+```text
+ValueError: could not broadcast
+input array from shape (3,)
+into shape (0,)
+```
 
-Next: the other three functions of the toy, and part 2 of this list.
+**What was missed:**
+
+1. **`&` is not "and".** In Python, `&` is bitwise AND, and it binds before `>=` and `<`.
+   So for $k = 7$ the condition reads `7 >= (0 & 7) < 5`, that is `7 >= 0 < 5`. Python chains
+   that into `(7 >= 0) and (0 < 5)`, which is True. The branch ran and tried to copy 3 values
+   into 0 places. The intent was right: "$k$ inside the array, otherwise $y$ stays zeros". Only
+   the operator was wrong. In C++, logical AND is `&&`. In Python it is `and`. The single `&` is
+   bitwise in both.
+2. **The `k == -0` branch.** $-0$ is just $0$, which the first branch already takes, so this
+   branch can never run. And it was wrong in itself: a delay of 0 is an unchanged copy, not an
+   empty list.
+3. **Why `x[:len(x)-k]` and not `x[:-k]`.** How many elements does `x[:-0]` have for a 5-element
+   `x`? The answer was unsure. It is `x[:0]`, which is empty. So `x[:-k]` silently breaks at
+   $k = 0$, and the explicit `len(x)-k` avoids that.
+
+**Correction:** the condition with `and`, and the dead branch removed:
+
+```python
+def delay_copy(x, k):
+    y = np.zeros_like(x)
+    if (k >= 0 and k < len(x)):
+        y[:k] = 0
+        y[k:] = x[:len(x)-k]
+    elif (k < 0):
+        y[:len(x)+k] = x[-k:len(x)]
+    return y
+```
+
+Python also lets the first condition be written as a chain, `0 <= k < len(x)`, which reads like
+the maths.
+
+## Checks that catch these
+
+- A quick estimate before the calculator. Most of these slips fall to one rough line.
+- Three significant figures until the last step.
+- Read the question's last line again before boxing an answer.
+- In code: a plain loop first as a correct reference, then the numpy form, with a checker judging
+  both.
+
+## Still open
+
+- **A negative shift past the end.** What does the corrected `delay_copy` do for $k = -7$ on a
+  5-sample array?
+- **The sharp peak.** Why does GCC-PHAT, the method the rig uses to find the delay, give such a
+  sharp peak?
+
+Part 2: the other three functions of the toy.
