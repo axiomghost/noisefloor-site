@@ -1,4 +1,7 @@
 ---
+// Bundled with the page, so KaTeX fonts are served from the site under the base path, not a CDN.
+import "katex/dist/katex.min.css";
+
 interface Frontmatter {
   title: string;
   description?: string;
@@ -306,6 +309,8 @@ const updated = formatDate(frontmatter.updatedDate);
 
       article :global(code) {
         font-family: "JetBrains Mono", "Courier New", monospace;
+        /* No ligatures, so >=, -> and != show as typed. */
+        font-variant-ligatures: none;
         font-size: 0.88em;
         color: var(--accent-3);
         background: rgba(0, 255, 159, 0.08);
@@ -323,6 +328,24 @@ const updated = formatDate(frontmatter.updatedDate);
         background: transparent;
         padding: 0;
         color: var(--text);
+      }
+
+      /* Shiki writes the theme background inline; keep the site's code panel instead. */
+      /* Tighter lines than prose. */
+      article :global(pre.astro-code) {
+        background-color: var(--code-bg) !important;
+        line-height: 1.55;
+      }
+
+      article :global(.math-nowrap) {
+        white-space: nowrap;
+      }
+
+      /* Long display equations scroll inside the column instead of widening the page. */
+      article :global(.katex-display) {
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 0.25rem 0;
       }
 
       article :global(blockquote) {
