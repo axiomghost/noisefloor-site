@@ -1,6 +1,6 @@
 # File-based publishing
 
-When `CONTENT_SOURCE=file`, published content comes from this directory instead of Supabase.
+All site content comes from this directory. `scripts/generate-content.mjs` reads it before every build.
 
 - `settings.json` controls the site name and description.
 - `projects/*.md` defines project pages.
@@ -26,7 +26,8 @@ media: [{"path":"/media/example.jpg","kind":"image","caption":"Example"}]
 Write the article body here.
 ```
 
-Run `pnpm run generate:content` after adding or changing content. The GitHub Actions workflow runs it automatically before building.
+Builds run `generate:content` automatically (locally through `scripts/site.sh`, see
+`USER_GUIDE.md`, and in GitHub Actions).
 
 ## Adding a project and its entries
 
@@ -71,4 +72,4 @@ and use its newest publication date to position it among other posts.
 To create a file through GitHub, open the repository, choose **Add file →
 Create new file**, enter the path and filename, paste the Markdown, and commit
 directly to `main`. For an existing local file, use **Add file → Upload files**
-and commit to `main`. Cloudflare then rebuilds and publishes the site.
+and commit to `main`. GitHub Actions then rebuilds and publishes the site to GitHub Pages.

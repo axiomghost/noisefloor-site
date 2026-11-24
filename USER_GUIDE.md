@@ -1,160 +1,103 @@
 # Noise Floor Site — User Guide
 https://axiomghost.github.io/noisefloor-site/
 
-This site directory is the publication target for Noise Floor.
+This repository is the publication target for Noise Floor. Drafts are written in the project
+they belong to (for example `traffic_intersection/learn/posts/`). A published post lives in
+`content/log/<slug>.md` here.
 
-## Preferred workflow
+## Publishing a post
 
-Preferred operating model: ask Arthur to prepare and publish the article.
+Tell Claude Code: "publish <post>" (or "preview <post>" to see it first). The `publish-post`
+skill (`~/.claude/skills/publish-post/`) then runs the whole job:
 
-Examples:
-- "Publish `docs/common/some-doc.md`"
-- "Prepare this article for publication"
-- "Sanitise and publish this post"
+1. reads and screens the draft (privacy, sensitive content);
+2. checks and previews it, and fixes mechanical and rendering problems in the draft;
+3. looks at it at desktop and phone width;
+4. copies it into `content/log/`, commits `Publish <title>` and pushes `main`;
+5. watches the GitHub Pages deploy and checks the live page.
 
-In the preferred workflow, Arthur handles:
-- source review
-- privacy/sensitivity screening
-- tone softening where needed
-- legal/ethical/compliance judgement
-- publishable packaging
-- site placement
-- build validation
-- publish execution
+It stops and asks only for private content, wording changes, a new project or tag, or
+unpublishing. Updating a post works the same way: same slug, and the first publication date is
+kept.
 
-## Manual fallback workflow
+## The pipeline, by hand
 
-The manual workflow is intentionally split into two steps:
+Windows has no npm, so everything runs in WSL. `scripts/site.sh` mirrors the repository into
+`~/nf-build` (a Linux folder with its own `node_modules`), and builds and serves from there.
+GitHub Actions builds the live site from the same `package-lock.json`.
 
-1. **prepare** a source Markdown file into the site staging area
-2. **publish** a reviewed staged file into the Astro content tree
-
-This keeps raw source material out of the live site content directory until it
-has passed through a basic safety filter and a human review.
-
-## Script locations
-
-Preparation script:
-- `site/scripts/prepare-post.sh`
-
-Publication script:
-- `site/scripts/publish-post.sh`
-
-## Step 1 — Prepare a source file
-
-Run:
+From a WSL shell:
 
 ```bash
-cd ~/.openclaw/workspace/site
-./scripts/prepare-post.sh /absolute/path/to/source.md
+S=/mnt/c/Users/umarf/projects/noise-floor-site/scripts/site.sh
+$S check   /mnt/c/path/to/post.md   # lint front matter, links, media, maths lines, privacy patterns
+$S preview /mnt/c/path/to/post.md   # build the site with this post added, check its page
+$S serve                            # http://localhost:4329/noisefloor-site/
+$S stage   /mnt/c/path/to/post.md   # copy into content/log/ as published, ready to commit
+$S build                            # build the site as committed, check every page
 ```
 
-What it does:
+Paths may also be Windows paths (`'C:\Users\...\post.md'`, in quotes). Then commit and push
+from the repository as usual. Pushing `main` deploys.
 
-1. copies the source file into `site/staging/`
-2. runs deterministic checks for obvious risky content
-3. writes a warnings report beside the staged file
-4. lightly masks certain obvious patterns (for example emails and local filesystem paths)
+`check` fails on:
+- a missing field, or a bad slug;
+- an unknown project;
+- a `series` without `series_order`;
+- an unclosed `$$` block;
+- relative links;
+- links to posts or `/media/` files that do not exist.
 
-Outputs:
-- staged Markdown file in `site/staging/`
-- warnings report in `site/staging/`
+It warns on:
+- tags missing from `content/tags.json`;
+- `$$` not on its own line;
+- email addresses, local paths, `localhost`, and secret-like words.
 
-Example:
+`preview` and `build` fail when KaTeX cannot typeset something, or when a built page links to
+a file that does not exist.
 
-```bash
-cd ~/.openclaw/workspace/site
-./scripts/prepare-post.sh /home/umar/.openclaw/workspace/docs/projects/ldpc-bg1/blog/review/2026-04-12-some-post.md
+## Front matter
+
+See `content/README.md`. A draft can keep `published: false`. `stage` and `preview` set
+`published: true` in the copy they write, and add today's `published_at` when it is missing.
+
+## Writing maths and code in posts
+
+Posts in `content/log/` and `content/projects/` are typeset at build time: KaTeX for maths,
+Shiki for code. Nothing runs in the reader's browser and nothing loads from a CDN.
+
+### Maths
+
+- Inline: `$\tau = d\sin\theta / c$` inside a sentence.
+- Display: `$$` on its own line, the equation, then `$$` on its own line:
+
+  ```markdown
+  $$
+  \hat{\tau} = \arg\max_{\tau} R_{12}(\tau)
+  $$
+  ```
+
+- The syntax is LaTeX maths as KaTeX supports it (`\frac`, `\int`, `\hat`, `\operatorname`,
+  `\text{...}`, `\mathrm{m/s}`). There is no `\label`/`\ref` numbering and no custom
+  preamble. A command KaTeX does not know shows in red, and `preview` reports it as an error.
+- A literal dollar sign in prose needs a backslash: `it cost \$5`.
+- Inside a table cell, `|` ends the cell, so write `\vert x \vert` or `\lvert x \rvert`
+  instead of `|x|`.
+- A phone column is about 310 px wide. A longer display equation scrolls sideways, so split it
+  with `\begin{aligned} ... \\ ... \end{aligned}`.
+
+### Code
+
+Fence code with three backticks and a language name, and Shiki colours it:
+
+````markdown
+```python
+tau = d * np.sin(theta) / c
 ```
+````
 
-### Important limitation
-
-The prepare script does **not** use AI.
-It only performs deterministic detection and light masking.
-
-That means it can help with obvious issues like:
-- email addresses
-- filesystem paths
-- suspicious token/secret language
-- URLs and host-like strings
-
-But it does **not** reliably perform:
-- tone softening
-- legal judgement
-- ethical/compliance judgement
-- nuanced editorial rewrite
-
-So the intended operating model is:
-- the script prepares a staged version
-- **you inspect `site/staging/`**
-- then you decide whether to publish
-
-## Step 2 — Publish a reviewed staged file
-
-Once the staged file looks acceptable, run:
-
-```bash
-cd ~/.openclaw/workspace/site
-./scripts/publish-post.sh /absolute/path/to/staged-file.md
-```
-
-What the publish script does:
-
-1. copies the reviewed file into `site/src/content/blog/`
-2. runs `npm run build`
-3. stages the copied file in git
-4. commits with a publish-style commit message
-5. pushes to the current remote branch
-
-Example:
-
-```bash
-cd ~/.openclaw/workspace/site
-./scripts/publish-post.sh /home/umar/.openclaw/workspace/site/staging/2026-04-12-some-post.md
-```
-
-## Directory roles
-
-### `site/staging/`
-Use for:
-- prepared candidate files waiting for review
-- warnings reports from the prepare step
-
-This is the inspection area.
-
-### `site/src/content/blog/`
-Use for:
-- valid site-ready content entries only
-
-Do not use it for:
-- raw source drafts
-- scratch notes
-- half-reviewed material
-
-## Summary of the workflow
-
-### Preferred
-Ask Arthur to prepare and publish the document.
-
-### Manual fallback — Prepare
-```bash
-cd ~/.openclaw/workspace/site
-./scripts/prepare-post.sh /absolute/path/to/source.md
-```
-
-### Manual fallback — Inspect
-Review:
-- `site/staging/<file>.md`
-- `site/staging/<file>.warnings.txt`
-
-### Manual fallback — Publish
-```bash
-cd ~/.openclaw/workspace/site
-./scripts/publish-post.sh /absolute/path/to/staged-file.md
-```
-
-## Notes
-
-- The preferred workflow is assistant-driven, not script-driven.
-- The current manual prepare step is deterministic, not AI-driven.
-- The current publish step assumes the site repo remote and push flow are already configured.
+- Common names: `python`, `bash`, `json`, `yaml`, `xml`, `cpp`, `matlab`, `text`.
+  With no name the block stays uncoloured.
+- Ligatures are off in all code, so `->`, `>=` and `!=` show exactly as typed.
+- Long lines scroll inside the block. Keep lines under about 40 characters if phone readers
+  should see whole lines.

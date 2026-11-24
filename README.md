@@ -1,20 +1,22 @@
 # Noise Floor Site
 
-Astro publication target for public technical writing.
+Astro publication target for public technical writing:
+https://axiomghost.github.io/noisefloor-site/
 
 ## Purpose
-This directory is the publishing target, not the drafting source of truth.
+This repository is the publishing target, not the drafting source of truth.
 
-- Drafts begin in project-local `docs/projects/<project>/blog/`
-- Approved publication packages are copied/adapted into the Astro content tree
-- Public release remains explicit and approval-gated
+- Drafts are written in the project they belong to.
+- A published post is a copy in `content/log/<slug>.md`; projects are in `content/projects/`.
+- Publishing happens when Umar asks for it ("publish <post>"); Claude then runs the
+  `publish-post` skill end to end. See `USER_GUIDE.md`.
 
-## Intended Astro shape
-- `src/content/blog/` — canonical publishable article entries
-- `public/images/` — public assets used by articles
-- `src/layouts/` — optional post/page layouts
-- `src/content.config.ts` — Astro content collection schema
+## Shape
+- `content/` — posts, project pages, tags and site settings (see `content/README.md`)
+- `public/` — images, media and standalone interactive pages
+- `src/` — Astro pages, layout and components
+- `scripts/site.sh` — the WSL build, preview and publish pipeline
+- `scripts/check-post.mjs`, `scripts/check-dist.mjs` — checks before and after the build
 
 ## Release discipline
-Do not treat presence in this directory as permission to publish.
-Prepare, preview, review, then stop for explicit signoff.
+Pushing `main` deploys. Nothing is pushed without Umar's request to publish.
