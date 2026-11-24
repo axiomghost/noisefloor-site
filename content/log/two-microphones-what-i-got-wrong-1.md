@@ -276,6 +276,84 @@ def delay_copy(x, k):
 Python also lets the first condition be written as a chain, `0 <= k < len(x)`, which reads like
 the maths.
 
+### NumPy refresher
+
+The idioms this function and the next three lean on. Each result below is the real output.
+
+**Slices from the ends.** A negative index counts from the end:
+
+```python
+x = np.arange(1, 6)  # 1 2 3 4 5
+x[:-2]               # 1 2 3
+x[-2:]               # 4 5
+```
+
+**Empty slices.** $-0$ is $0$, so `x[:-0]` is `x[:0]`. A slice past the end is also empty, with no
+error. Only an index past the end, such as `x[7]`, raises an `IndexError`. The $k = 7$ crash came
+from assigning 3 values into an empty slice, not from the slicing itself.
+
+```python
+x[:-0]   # []
+x[7:]    # []
+```
+
+**A shift with zeros in**, the same result as `delay_copy(x, 2)`:
+
+```python
+z = np.zeros(2, dtype=int)
+np.concatenate((z, x[:-2]))
+# 0 0 1 2 3
+```
+
+**A mask** keeps only the elements where a condition is True. `peak_lag` uses this to search
+only inside the delay window:
+
+```python
+lags = np.arange(-5, 6)
+lags[np.abs(lags) <= 2]
+# -2 -1 0 1 2
+```
+
+**`argmax` with a tie** returns the first maximum:
+
+```python
+c = np.array([3, 9, 2, 9])
+np.argmax(c)   # 1
+```
+
+**The lags of a full correlation.** `np.correlate(a, b, mode="full")` returns
+$\text{len}(a) + \text{len}(b) - 1$ values, for lags from $-(\text{len}(b) - 1)$ up to
+$\text{len}(a) - 1$. With lengths 4 and 3: 6 values, lags $-2$ to $3$. `xcorr_lags` has to
+build exactly this axis.
+
+**`and` against `&`.** On plain numbers, `and` is logical and `&` is bitwise:
+
+```python
+7 >= 0 and 7 < 5   # False
+7 >= 0 & 7 < 5     # True
+```
+
+On numpy arrays it is the other way round. `and` raises an error (an array has no single truth
+value), and `&` combines conditions element by element. It needs brackets, because `&` binds
+before `>` and `<`:
+
+```python
+a = np.array([1, 0, 1])
+b = np.array([1, 1, 0])
+(a > 0) & (b > 0)
+# True False False
+```
+
+**A slice is a view, not a copy.** Writing into a slice changes the original array. Use
+`.copy()` when the original must stay as it was:
+
+```python
+a = np.arange(1, 6)
+s = a[1:3]
+s[0] = 0
+a   # 1 0 3 4 5
+```
+
 ## Checks that catch these
 
 - A quick estimate before the calculator. Most of these slips fall to one rough line.
