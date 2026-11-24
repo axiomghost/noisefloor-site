@@ -1,0 +1,32 @@
+---
+import BlogPostLayout from "../../layouts/BlogPostLayout.astro";
+import EntryCard from "../../components/EntryCard.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import { href, allTags, tagName, entries, projects } from "../../site";
+
+export function getStaticPaths() {
+  return allTags().map((tag) => ({ params: { tag } }));
+}
+
+const { tag } = Astro.params;
+const posts = entries().filter((e) => (e.tags ?? []).includes(tag));
+const work = projects().filter((p) => (p.tags ?? []).includes(tag));
+---
+
+<BlogPostLayout
+  frontmatter={{ title: tagName(tag), description: `Everything on noise-floor tagged ${tagName(tag).toLowerCase()}.` }}
+  eyebrow={{ label: "Tag", href: href("/log/") }}
+>
+  {posts.length > 0 && (
+    <section aria-labelledby="tag-posts">
+      <h2 id="tag-posts">Diary entries</h2>
+      <ul class="card-list">{posts.map((entry) => <EntryCard entry={entry} />)}</ul>
+    </section>
+  )}
+  {work.length > 0 && (
+    <section aria-labelledby="tag-projects">
+      <h2 id="tag-projects">Projects</h2>
+      <ul class="card-list">{work.map((project) => <ProjectCard project={project} />)}</ul>
+    </section>
+  )}
+</BlogPostLayout>

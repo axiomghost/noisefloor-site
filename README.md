@@ -15,7 +15,16 @@ This repository is the publishing target, not the drafting source of truth.
 ## Shape
 - `content/` — posts, project pages, tags and site settings (see `content/README.md`)
 - `public/` — images, media and standalone interactive pages
-- `src/` — Astro pages, layout and components
+- `src/` — Astro pages, layouts and components:
+  - `src/styles/site.css` holds every style: light and dark tokens, layout, prose, cards and
+    print;
+  - `src/layouts/SiteLayout.astro` is the frame of every page: meta and link previews, the
+    menu and theme toggle, the footer;
+  - `src/layouts/BlogPostLayout.astro` adds the title, meta line, series box and prev/next
+    links;
+  - `src/site.ts` holds the shared data helpers (entries, series, tags, reading time).
+- `src/pages/rss.xml.ts` (feed) and `src/pages/tags/[tag].astro` (one page per tag)
+- `scripts/make-og-image.py` — draws `public/images/og-default.png`, the link-preview image
 - `scripts/site.sh` — the WSL build, preview and publish pipeline
 - `scripts/check-post.mjs`, `scripts/check-dist.mjs` — checks before and after the build
 

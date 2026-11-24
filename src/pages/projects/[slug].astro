@@ -1,33 +1,27 @@
 ---
-import { fileContent } from "../../content.generated";
-import { orderDiary } from "../../diary-order";
 import BlogPostLayout from "../../layouts/BlogPostLayout.astro";
 import ContentBlocks from "../../components/ContentBlocks.astro";
+import EntryCard from "../../components/EntryCard.astro";
+import { href, entries, projects, humanize } from "../../site";
 
 export function getStaticPaths() {
-  return fileContent.projects.filter((project) => project.published).map((project) => ({ params: { slug: project.slug }, props: { project } }));
+  return projects().map((project) => ({ params: { slug: project.slug }, props: { project } }));
 }
 
 const { project } = Astro.props;
-const entries = orderDiary(
-  fileContent.entries.filter((entry) => entry.published && entry.project_id === project.id),
-);
-const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const diary = entries().filter((entry) => entry.project_id === project.id);
 ---
 
-<BlogPostLayout frontmatter={{ title: project.name, description: project.summary, tags: project.tags }}>
-  <p class="post-meta">&gt; project // {project.status}</p>
+<BlogPostLayout
+  frontmatter={{ title: project.name, description: project.summary, tags: project.tags }}
+  eyebrow={{ label: `Project · ${humanize(project.status ?? "active")}`, href: href("/projects/") }}
+>
   <ContentBlocks kind="projects" slug={project.slug} />
-  {entries.length > 0 && (
+  {diary.length > 0 && (
     <section aria-labelledby="project-diary">
-      <h2 id="project-diary">Project diary</h2>
-      <ul>
-        {entries.map((entry) => (
-          <li>
-            <a href={`${base}/log/${entry.slug}/`}>{entry.title}</a>
-            {entry.summary && <p>{entry.summary}</p>}
-          </li>
-        ))}
+      <h2 id="project-diary">Diary entries</h2>
+      <ul class="card-list">
+        {diary.map((entry) => <EntryCard entry={entry} />)}
       </ul>
     </section>
   )}

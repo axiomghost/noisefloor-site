@@ -2,18 +2,31 @@
 import { fileContent } from "../../content.generated";
 import BlogPostLayout from "../../layouts/BlogPostLayout.astro";
 import ContentBlocks from "../../components/ContentBlocks.astro";
+import { href, readingMinutes, seriesOf, projectOf } from "../../site";
 
 export function getStaticPaths() {
-  return fileContent.entries.filter((entry) => entry.published && entry.slug).map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+  return fileContent.entries
+    .filter((entry) => entry.published && entry.slug)
+    .map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
 }
 
 const { entry } = Astro.props;
-const project = fileContent.projects.find(({ id, published }) => published && id === entry.project_id);
-const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const project = projectOf(entry);
+const series = seriesOf(entry);
 ---
 
-<BlogPostLayout frontmatter={{ title: entry.title, description: entry.summary, pubDate: entry.published_at ? new Date(entry.published_at) : undefined, tags: entry.tags }}>
-  <p class="post-meta">&gt; {entry.type} // {entry.published_at?.slice(0, 10) ?? "undated"}</p>
-  {project && <p>Project: <a href={`${base}/projects/${project.slug}/`}>{project.name}</a></p>}
+<BlogPostLayout
+  frontmatter={{
+    title: entry.title,
+    description: entry.summary,
+    pubDate: entry.published_at ? new Date(entry.published_at) : undefined,
+    tags: entry.tags,
+  }}
+  eyebrow={{ label: series ? series.name : "Diary", href: href("/log/") }}
+  readingMinutes={readingMinutes(entry.body)}
+  project={project ? { name: project.name, slug: project.slug } : undefined}
+  series={series ?? undefined}
+  feedback
+>
   <ContentBlocks kind="log" slug={entry.slug} />
 </BlogPostLayout>
