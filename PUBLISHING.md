@@ -91,8 +91,10 @@ Post format: `content/README.md`. Maths and code: `USER_GUIDE.md`.
    - Wait once with `gh run watch <id> --repo axiomghost/noisefloor-site --exit-status`.
      Don't poll in a loop.
    - On failure, run `gh run view <id> --log-failed`, fix the problem, and push again.
-   - Then open `https://axiomghost.github.io/noisefloor-site/log/<slug>/` and check the title
-     and the maths.
+   - Then open `https://axiomghost.github.io/noisefloor-site/log/<slug>/?v=<commit>` and check
+     the title and the maths.
+   - The `?v=<commit>` query skips the GitHub Pages cache, which serves the old copy for a few
+     minutes after a deploy.
 8. **Report briefly.**
    - The live URL, and the commit hash.
    - Your edits to the source draft, if any. The draft's own repository still needs them
